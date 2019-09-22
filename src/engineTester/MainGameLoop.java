@@ -110,7 +110,7 @@ public class MainGameLoop {
 
         TexturedModel testTexture = new TexturedModel(testModel,new ModelTexture(loader.loadTexture("pine")));
         testTexture.getTexture().setHasTransparancey(true);
-       
+
 
 //-----------------------------------------------------------------
 
