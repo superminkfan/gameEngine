@@ -3,8 +3,8 @@ package textures;
 public class ModelTexture {
 
 private int textureID;
-private float shineDamper = 10;
-private float reflectivity = 0.5f;
+private float shineDamper = 100;
+private float reflectivity = 3;
 
 private boolean hasTransparancey = false;
 private boolean useFakeLighting = false;

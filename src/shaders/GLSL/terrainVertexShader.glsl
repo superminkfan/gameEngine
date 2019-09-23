@@ -20,7 +20,7 @@ uniform vec3 lightPosition;
 
 
 
-const float density = 0.003;
+const float density = 0.002;
 const float gradient = 8;
 
 void main (void)
