@@ -8,7 +8,7 @@ public class TexturedModel {
 
     private ModelTexture texture;
 
-    public TexturedModel(RawModel rawModel, ModelTexture texture) {
+    public TexturedModel(RawModel rawModel, ModelTexture texture ) {
         this.rawModel = rawModel;
         this.texture = texture;
     }

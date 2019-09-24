@@ -9,6 +9,18 @@ private float reflectivity = 3;
 private boolean hasTransparancey = false;
 private boolean useFakeLighting = false;
 
+private  int numberOfRows = 1;
+
+    public int getNumberOfRows() {
+        return numberOfRows;
+    }
+
+    public void setNumberOfRows(int numberOfRows) {
+        this.numberOfRows = numberOfRows;
+    }
+
+
+
     public boolean isUseFakeLighting() {
         return useFakeLighting;
     }

@@ -4,6 +4,7 @@ import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.DisplayManager;
+import terrains.Terrain;
 
 public class Player extends Entity {
 
@@ -30,7 +31,7 @@ public class Player extends Entity {
 
     }
 
-    public void move()
+    public void move(Terrain terrain)
     {
         checkInputs();
         super.increaseRotation(0,currentTurnSpeed * DisplayManager.getFrameTimeSecinds(), 0);
@@ -46,11 +47,16 @@ public class Player extends Entity {
         upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSecinds();
         super.increasePosition(0,upwardsSpeed*DisplayManager.getFrameTimeSecinds() , 0);
 
-        if (super.getPosition().y < TERRAIN_HEIGHT)
+
+        float terreinHeight = terrain.getHeightOfTerrain(super.getPosition().x , super.getPosition().z);
+        if (super.getPosition().y < terreinHeight)
+            //здесь будет проверка на
+            // соприкосновение с землёй
+            //terrainCollisionEfeect
         {
             upwardsSpeed = 0;
             isInAir = false;
-            super.getPosition().y = TERRAIN_HEIGHT;
+            super.getPosition().y = terreinHeight;
         }
 
     }
