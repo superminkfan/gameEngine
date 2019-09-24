@@ -122,7 +122,7 @@ public class MainGameLoop {
         ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
         fernTextureAtlas.setNumberOfRows(2);
 
-        TexturedModel fernTexture = new TexturedModel(fernModel,new ModelTexture(loader.loadTexture("fern")));
+        TexturedModel fernTexture = new TexturedModel(OBJLoader.loadObjFile("fern" , loader) , fernTextureAtlas);
         fernTexture.getTexture().setHasTransparancey(true);
 
 //-----------------------------------------------------------------
