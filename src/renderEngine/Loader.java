@@ -15,9 +15,9 @@ import java.util.List;
 
 public class Loader {
 
-    private List<Integer> vaos = new ArrayList<Integer>();
-    private List<Integer> vbos = new ArrayList<Integer>();
-    private List<Integer> textures = new ArrayList<Integer>();
+    private List<Integer> vaos = new ArrayList<>();
+    private List<Integer> vbos = new ArrayList<>();
+    private List<Integer> textures = new ArrayList<>();
 
 
 
@@ -63,7 +63,16 @@ public class Loader {
             e.printStackTrace();
         }
 
-        int textureID = texture.getTextureID();
+
+        int textureID = 0;
+try {
+
+     textureID = texture.getTextureID();
+}
+catch (java.lang.NullPointerException e)
+{
+    System.out.println(e.fillInStackTrace());
+}
         textures.add(textureID);
         return textureID;
     }

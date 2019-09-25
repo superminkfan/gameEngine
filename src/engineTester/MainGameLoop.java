@@ -190,7 +190,7 @@ public class MainGameLoop {
 
 
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        List<Entity> entities = new ArrayList<Entity>();
+        List<Entity> entities = new ArrayList<>();
         Random random = new Random();
         for(int i = 0 ; i < 50 ; i++)
         {
