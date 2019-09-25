@@ -34,6 +34,8 @@ public  class StaticShader extends ShaderProgram{
 
     @Override
     protected void getAllUniformLocations() {
+        //получаем информацию по каждой uniform переменной!
+        //обязательно!!!
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
         location_viewMatrix = super.getUniformLocation("viewMatrix") ;

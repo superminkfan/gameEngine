@@ -19,20 +19,20 @@ uniform vec3 skyColour;
 
 void main(void)
 {
-
+//все векторы должны быть нормализованными
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitLightVector = normalize(toLightVector);
 
     float nDot1 = dot(unitNormal,unitLightVector);
     float brightness = max(nDot1, 0.2);
-    vec3 diffuse = brightness*lightColour;
+    vec3 diffuse = brightness*lightColour;//диффузное осфещение
 
     vec3 unitVectorToCamera = normalize(toCameraVector);
-    vec3 lightDirection = -unitLightVector;
+    vec3 lightDirection = -unitLightVector;//потому что он направлен в другую сторону
     vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
 
 
-    float specularFactor = dot(reflectedLightDirection,unitVectorToCamera);
+    float specularFactor = dot(reflectedLightDirection,unitVectorToCamera);//считаем освещение спектральное
     specularFactor = max(specularFactor, 0.0);
     float damedFactor = pow(specularFactor , shineDamper);
     vec3 finalSpecular = damedFactor * reflectivity * lightColour;

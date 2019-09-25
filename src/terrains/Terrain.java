@@ -170,9 +170,11 @@ public class Terrain {
 
     private Vector3f calculateNormal(int x , int z , BufferedImage image)
     {
+        //невероятно нужный метод
+        //считает(придумывает) нормали у ландшафта с высотой что даёт возможность сделать нормальные тени
         float heightL = getHeight(x-1,z , image );
         float heightR = getHeight(x+1,z , image );
-        float heightD = getHeight(x,z-1 , image );//хз как но работает!
+        float heightD = getHeight(x,z-1 , image );
         float heightU = getHeight(x,z+1 , image );
 
         Vector3f normal = new Vector3f(heightL - heightR , 2f, heightD - heightU);

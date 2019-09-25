@@ -21,7 +21,7 @@ public class OBJFileLoader {
         try {
             isr = new FileReader(objFile);
         } catch (FileNotFoundException e) {
-            System.err.println("File not found in res; don't use any extention");
+            System.err.println("Файл не найден в \res!  Сделай что нибудь!!");
         }
         BufferedReader reader = new BufferedReader(isr);
         String line;
@@ -67,7 +67,7 @@ public class OBJFileLoader {
             }
             reader.close();
         } catch (IOException e) {
-            System.err.println("Error reading the file");
+            System.err.println("Ошибка чтения файла няяяяяяяяяяяяя");
         }
         removeUnusedVertices(vertices);
         float[] verticesArray = new float[vertices.size() * 3];

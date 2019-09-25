@@ -41,6 +41,7 @@ void main (void)
     if(useFakeLighting > 0.5)
     {
         actualNormal = vec3(0.0,1.0,0.0); //тупо вверх
+        //пришлось сделать обманку для цветов так как у них нормали в разные стороны
     }
 
     surfaceNormal =  (transformationMatrix * vec4(normal,0.0)).xyz;
@@ -49,7 +50,7 @@ void main (void)
     toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz;
 
     float distance = length(positionRelativeToCam.xyz);
-    visibility = exp(-pow((distance*density) , gradient));
+    visibility = exp(-pow((distance*density) , gradient));//считаем туман
 
     visibility = clamp(visibility, 0.0 , 1.0);
 }

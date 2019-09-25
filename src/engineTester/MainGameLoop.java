@@ -4,10 +4,13 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import gui.GuiRenderer;
+import gui.GuiTexture;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.*;
 import models.RawModel;
@@ -28,9 +31,28 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
 
+//===============================TESTS===============================
 
-        //terreans pac
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
+
+        List<GuiTexture> guis = new ArrayList<>();
+        GuiTexture gui = new GuiTexture(loader.loadTexture("blendMap") , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
+        guis.add(gui);
+
+        GuiRenderer guiRenderer = new GuiRenderer(loader);
+
+
+
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//=============================END==TESTS==============================
+
+
+
+
+//====================================TERRAINS========================================
 
         TerrainTexture backgraondTexture = new TerrainTexture(loader.loadTexture("grassy2"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
@@ -40,12 +62,12 @@ public class MainGameLoop {
 
         TerrainTexturePack texturePack = new TerrainTexturePack(backgraondTexture,rTexture,gTexture,bTexture);
 
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap2"));
+        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
 
 
 
-//==============================здесь текстуры и модель игрока=====================================
+//==============================PLAYER=====================================
         ModelData watData = OBJFileLoader.loadOBJ("wat");
 
         RawModel watModel = loader.loadToVAO(
@@ -55,13 +77,13 @@ public class MainGameLoop {
                 watData.getIndices()
         );
 
-        TexturedModel watTexture = new TexturedModel(watModel,new ModelTexture(loader.loadTexture("box")));
+        TexturedModel watTexture = new TexturedModel(watModel,new ModelTexture(loader.loadTexture("white")));
 
 
         Player player = new Player(watTexture,
                 new Vector3f(100,0,-50),0,0,0,15);
 //========================================================================================
-//-----------------------------------------------------------------
+//--------------------------------FERN---------------------------------
 
         ModelData fernData = OBJFileLoader.loadOBJ("fern");
 
@@ -72,7 +94,13 @@ public class MainGameLoop {
                 fernData.getIndices()
                 );
 
-//-----------------------------------------------------------------
+        ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
+        fernTextureAtlas.setNumberOfRows(2);
+
+        TexturedModel fernTexture = new TexturedModel(OBJLoader.loadObjFile("fern" , loader) , fernTextureAtlas);
+        fernTexture.getTexture().setHasTransparancey(true);
+
+//--------------------------------GRAASS--AND--FLOWERS-----------------------------
 
         ModelData grassData = OBJFileLoader.loadOBJ("grassModel");
 
@@ -83,7 +111,15 @@ public class MainGameLoop {
                 grassData.getIndices()
         );
 
-//-----------------------------------------------------------------
+        TexturedModel flowerTexture = new TexturedModel(grassModel,new ModelTexture(loader.loadTexture("flower")));
+        flowerTexture.getTexture().setHasTransparancey(true);
+        flowerTexture.getTexture().setUseFakeLighting(true);
+
+        TexturedModel grassTexture = new TexturedModel(grassModel,new ModelTexture(loader.loadTexture("grassTexture")));
+        grassTexture.getTexture().setHasTransparancey(true);
+        grassTexture.getTexture().setUseFakeLighting(true);
+
+//---------------------------------LOW--POLY--TREE----------------------------
 
         ModelData lowPolyTreeData_1 = OBJFileLoader.loadOBJ("lowPolyTree");
 
@@ -94,9 +130,12 @@ public class MainGameLoop {
                 lowPolyTreeData_1.getIndices()
         );
 
-//-----------------------------------------------------------------
+        TexturedModel treeLowPoly_1_Texture = new TexturedModel(treeLowPolyModel_1,new ModelTexture(loader.loadTexture("lowPolyTree")));
 
-        ModelData boxData = OBJFileLoader.loadOBJ("dom");
+
+//-------------------------------BOX----------------------------------
+
+        ModelData boxData = OBJFileLoader.loadOBJ("box");
 
         RawModel boxModel = loader.loadToVAO(
                 boxData.getVertices(),
@@ -105,8 +144,11 @@ public class MainGameLoop {
                 boxData.getIndices()
         );
 
+        TexturedModel boxTexture = new TexturedModel(boxModel,new ModelTexture(loader.loadTexture("box")));
 
-//-----------------------------------------------------------------
+
+
+//-------------------------------PINE---------------------------------
 
         ModelData pineData = OBJFileLoader.loadOBJ("pine");
 
@@ -117,53 +159,28 @@ public class MainGameLoop {
                 pineData.getNormals(),
                 pineData.getIndices()
         );
-//-----------------------------------------------------------------
-
-        ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
-        fernTextureAtlas.setNumberOfRows(2);
-
-        TexturedModel fernTexture = new TexturedModel(OBJLoader.loadObjFile("fern" , loader) , fernTextureAtlas);
-        fernTexture.getTexture().setHasTransparancey(true);
-
-//-----------------------------------------------------------------
-
-        TexturedModel boxTexture = new TexturedModel(boxModel,new ModelTexture(loader.loadTexture("box")));
-
-//-----------------------------------------------------------------
-
-        TexturedModel flowerTexture = new TexturedModel(grassModel,new ModelTexture(loader.loadTexture("flower")));
-        flowerTexture.getTexture().setHasTransparancey(true);
-        flowerTexture.getTexture().setUseFakeLighting(true);
-
-        TexturedModel grassTexture = new TexturedModel(grassModel,new ModelTexture(loader.loadTexture("grassTexture")));
-        grassTexture.getTexture().setHasTransparancey(true);
-        grassTexture.getTexture().setUseFakeLighting(true);
-
-//-----------------------------------------------------------------
-
-
-
-        TexturedModel treeLowPoly_1_Texture = new TexturedModel(treeLowPolyModel_1,new ModelTexture(loader.loadTexture("lowPolyTree")));
-
-
-        //-----------------------------------------------------------------
 
         TexturedModel pineTexture = new TexturedModel(pineModel,new ModelTexture(loader.loadTexture("pine")));
         pineTexture.getTexture().setHasTransparancey(true);
 
 
-//-----------------------------------------------------------------
+//---------------------------HOUSE---------------------------------
 
+        ModelData houseData = OBJFileLoader.loadOBJ("dom");
 
+        RawModel houseModel = loader.loadToVAO(
+                houseData.getVertices(),
+                houseData.getTextureCoords() ,
+                houseData.getNormals(),
+                houseData.getIndices()
+        );
 
+        TexturedModel houseTexture = new TexturedModel(houseModel,new ModelTexture(loader.loadTexture("water")));
 
-        //---------------------------------------------
-
-        //---------------------------------------------
+   //================================================
 
 
         Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
-
 
         Terrain terrain = new Terrain(0,-1,loader , texturePack , blendMap , "heightmap");
         Terrain terrain2 = new Terrain(-1,-1,loader , texturePack , blendMap , "heightmap");
@@ -171,15 +188,16 @@ public class MainGameLoop {
         Camera camera = new Camera(player);
         MasterRenderer renderer = new MasterRenderer();
 
-        //+++++++++++++++++++++++++++++++++++
+
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         List<Entity> entities = new ArrayList<Entity>();
         Random random = new Random();
         for(int i = 0 ; i < 50 ; i++)
         {
             float x = random.nextFloat()*800 -400;
-            float z = random.nextFloat()* -600  +  7;
-            float y = terrain.getHeightOfTerrain(x,z);
-            entities.add(new Entity(boxTexture,
+            float z = random.nextFloat()* -600 ;
+            float y = terrain.getHeightOfTerrain(x,z) + 4;
+            entities.add(new Entity(houseTexture,
                     new Vector3f(x, y,z),
                     0,random.nextFloat() *500,0,2));
         }
@@ -187,12 +205,22 @@ public class MainGameLoop {
         for(int i=0 ; i <100 ; i++)
         {
             float x = random.nextFloat()*800 -400;
-            float z = random.nextFloat()* -600  +  7;
+            float z = random.nextFloat()* -600 ;
             float y = terrain.getHeightOfTerrain(x,z);
 
             entities.add(new Entity(fernTexture,random.nextInt(4) ,
                     new Vector3f(x,y,z),
                     0,random.nextFloat() *500,0,random.nextFloat()*1.5f));
+
+
+             x = random.nextFloat()*800 -400;
+             z = random.nextFloat()* -600 ;
+             y = terrain.getHeightOfTerrain(x,z)+5;
+            entities.add(new Entity(boxTexture,
+                    new Vector3f(x, y,z),
+                    0,random.nextFloat() *500,0,5));
+
+
 
             x = random.nextFloat()*800 -400;
             z = random.nextFloat()* -600;
@@ -246,9 +274,10 @@ public class MainGameLoop {
                 renderer.processEntity(entity);
             }
             renderer.render(light, camera);
+           // guiRenderer.render(guis);
             DisplayManager.updateDisplay();
         }
-
+       // guiRenderer.cleanUp();
         renderer.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
