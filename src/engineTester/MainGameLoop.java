@@ -38,8 +38,10 @@ public class MainGameLoop {
 
 
         List<GuiTexture> guis = new ArrayList<>();
-        GuiTexture gui = new GuiTexture(loader.loadTexture("blendMap") , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
+        GuiTexture gui = new GuiTexture(loader.loadTexture("blow") , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
+        //GuiTexture gui1 = new GuiTexture(loader.loadTexture("heightMap") , new Vector2f(0.4f,0.4f) , new Vector2f(0.25f,0.25f));
         guis.add(gui);
+        //guis.add(gui1);
 
         GuiRenderer guiRenderer = new GuiRenderer(loader);
 
@@ -179,8 +181,14 @@ public class MainGameLoop {
 
    //================================================
 
+//+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=++=+=LIGHTS==+=+=+=+=++==++=+=+=+=+=+=+=+=+
+        Light light = new Light(new Vector3f(0,10000,-7000),new Vector3f(1,1,1));
+        List<Light> lights = new ArrayList<>();
+        lights.add(light);
+        lights.add(new Light(new Vector3f(-200,10,-200) , new Vector3f(10,0,0)));
+        lights.add(new Light(new Vector3f(200,10,200) , new Vector3f(0,0,10)));
 
-        Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
+//+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=++=+=+=+=+=+=+=+=+=+=++==++=+=+=+=+=+=+=+=+
 
         Terrain terrain = new Terrain(0,-1,loader , texturePack , blendMap , "heightmap");
         Terrain terrain2 = new Terrain(-1,-1,loader , texturePack , blendMap , "heightmap");
@@ -273,7 +281,7 @@ public class MainGameLoop {
             for(Entity entity:entities){
                 renderer.processEntity(entity);
             }
-            renderer.render(light, camera);
+            renderer.render(lights, camera);
            // guiRenderer.render(guis);
             DisplayManager.updateDisplay();
         }

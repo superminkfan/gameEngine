@@ -63,28 +63,23 @@ public class MasterRenderer {
 
 
 
-    public void render (Light sun , Camera camera)
+    public void render (List<Light> lights , Camera camera)
     {
         prepare();
         shader.start();
-
         shader.loadSkuColourVariable(RED, GREEN , BLUE);
-
-        shader.loadLight(sun);
+        shader.loadLights(lights);
         shader.loadViewMatrix(camera);
-
         renderer.render(entities);
-
         shader.stop();
 
         terrainShader.start();
         terrainShader.loadSkuColourVariable(RED, GREEN , BLUE);
-        terrainShader.loadLight(sun);
+        terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
-
         terrainRenderer.render(terrains);
-
         terrainShader.stop();
+
 
         terrains.clear();
         entities.clear();
