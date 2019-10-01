@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
+import skybox.SkyboxRenderer;
 import terrains.Terrain;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class MasterRenderer {
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PLANE = 1000f;
 
-    private static final float RED = 0.1f;
+    private static final float RED = 0.375f;
     private static final float GREEN = 0.5f;
     private static final float BLUE = 0.5f;
 
@@ -40,13 +41,18 @@ public class MasterRenderer {
 
     private List<Terrain> terrains = new ArrayList<>();
 
-    public MasterRenderer() {
+
+    private SkyboxRenderer skyboxRenderer;
+
+
+    public MasterRenderer(Loader loader) {
 
         enableCulling();
 
         createProjectionMatrix();
         renderer = new EntityRenderer(shader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+        skyboxRenderer = new SkyboxRenderer(loader,projectionMatrix);
 
     }
 
@@ -59,6 +65,12 @@ public class MasterRenderer {
     public static void  disableCulling()
     {
         GL11.glDisable(GL11.GL_CULL_FACE);
+    }
+
+
+    public Matrix4f getProjectionMatrix()
+    {
+        return projectionMatrix;
     }
 
 
@@ -80,7 +92,7 @@ public class MasterRenderer {
         terrainRenderer.render(terrains);
         terrainShader.stop();
 
-
+        skyboxRenderer.render(camera ,RED, GREEN , BLUE );
         terrains.clear();
         entities.clear();
 
