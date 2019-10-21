@@ -25,13 +25,19 @@ uniform vec2 offset;
 
 
 
-const float density = 0.002;
-const float gradient = 8;
+const float density = 0;
+const float gradient = 5;
+
+uniform vec4 plane ;
 
 
 void main (void)
 {
     vec4 worldPosition = transformationMatrix * vec4(position.x , position.y , position.z , 1.0);
+
+
+    gl_ClipDistance[0] = dot(worldPosition,plane);
+
 
     vec4 positionRelativeToCam = viewMatrix  * worldPosition;
 

@@ -12,7 +12,7 @@ import renderEngine.Loader;
 
 public class SkyboxRenderer {
 
-    private static final float SIZE = 500f;
+    private static final float SIZE = 1500f;
 
     private static final float[] VERTICES = {
             -SIZE,  SIZE, -SIZE,
@@ -60,7 +60,8 @@ public class SkyboxRenderer {
 
 
     private static String[] TEXTURE_FILES= {"right" , "left" , "top" , "bottom" , "back" , "front"};
-    private static String[] NIGHT_TEXTURE_FILES= {"nightRight" , "nightLeft" , "nightTop" , "NightBottom" , "NightBack" , "NightFront"};
+    private static String[] NIGHT_TEXTURE_FILES= {"right" , "left" , "top" , "bottom" , "back" , "front"};
+   // private static String[] NIGHT_TEXTURE_FILES= {"nightRight" , "nightLeft" , "nightTop" , "NightBottom" , "NightBack" , "NightFront"};
 
     private RawModel cube;
     private int texture;
@@ -100,26 +101,26 @@ public class SkyboxRenderer {
 
     private void bindTextures(){
         time += DisplayManager.getFrameTimeSecinds() * 1000;
-        time %= 24000;
+        time %= 240000;
         int texture1;
         int texture2;
         float blendFactor;
-        if(time >= 0 && time < 5000){
+        if(time >= 0 && time < 50000){
             texture1 = nightTexture;
             texture2 = nightTexture;
-            blendFactor = (time - 0)/(5000 - 0);
-        }else if(time >= 5000 && time < 8000){
+            blendFactor = (time - 0)/(50000 - 0);
+        }else if(time >= 50000 && time < 80000){
             texture1 = nightTexture;
             texture2 = texture;
-            blendFactor = (time - 5000)/(8000 - 5000);
-        }else if(time >= 8000 && time < 21000){
+            blendFactor = (time - 50000)/(80000 - 50000);
+        }else if(time >= 80000 && time < 210000){
             texture1 = texture;
             texture2 = texture;
-            blendFactor = (time - 8000)/(21000 - 8000);
+            blendFactor = (time - 80000)/(210000 - 80000);
         }else{
             texture1 = texture;
             texture2 = nightTexture;
-            blendFactor = (time - 21000)/(24000 - 21000);
+            blendFactor = (time - 210000)/(240000 - 210000);
         }
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);

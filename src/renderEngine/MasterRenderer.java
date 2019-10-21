@@ -7,6 +7,7 @@ import models.TexturedModel;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import skybox.SkyboxRenderer;
@@ -21,10 +22,10 @@ public class MasterRenderer {
 
     private static final float FOV = 70;
     private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 1000f;
+    private static final float FAR_PLANE = 7000f;
 
-    private static final float RED = 0.375f;
-    private static final float GREEN = 0.5f;
+    private static final float RED = 0.7f;
+    private static final float GREEN = 0.6f;
     private static final float BLUE = 0.5f;
 
 
@@ -74,11 +75,27 @@ public class MasterRenderer {
     }
 
 
+    public void renderScene(List<Entity> entities , List<Terrain> terrains , List<Light> lights ,
+                            Camera camera , Vector4f clipPlane)
+    {
+        for(Terrain terrain:terrains){
+            processTerrain(terrain);
+        }
 
-    public void render (List<Light> lights , Camera camera)
+        for(Entity entity:entities){
+            processEntity(entity);
+        }
+        render(lights,camera,clipPlane);
+
+    }
+
+
+
+    public void render (List<Light> lights , Camera camera , Vector4f clipPlane)
     {
         prepare();
         shader.start();
+        shader.loadClipPlane(clipPlane);
         shader.loadSkuColourVariable(RED, GREEN , BLUE);
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
@@ -86,6 +103,7 @@ public class MasterRenderer {
         shader.stop();
 
         terrainShader.start();
+        terrainShader.loadClipPlane(clipPlane);
         terrainShader.loadSkuColourVariable(RED, GREEN , BLUE);
         terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
@@ -114,7 +132,7 @@ public class MasterRenderer {
             batch.add(entity);
         }
         else {
-            List<Entity> newBatch = new ArrayList<Entity>();
+            List<Entity> newBatch = new ArrayList<>();
             entities.put(entityModel,newBatch);
         }
     }

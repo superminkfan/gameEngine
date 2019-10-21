@@ -101,6 +101,12 @@ public class Camera {
     }
 
 
+    public void invertPitch()
+    {
+        this.pitch = -pitch;
+    }
+
+
 
     public Vector3f getPosition() {
         return position;

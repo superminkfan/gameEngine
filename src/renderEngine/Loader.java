@@ -63,7 +63,7 @@ public class Loader {
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Попытался подгрузить текстуру " + fileName + ", и всё, и пиздец");
+            System.err.println("Попытался подгрузить текстуру или сущность " + fileName + ", и всё, и пиздец");
             System.exit(-1);
         }
         return new TextureData(buffer, width, height);
