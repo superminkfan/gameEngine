@@ -17,7 +17,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[4];
 
-uniform float useFakeLighting;
+uniform float useFakeLighting;//очень качественный костыль
 
 uniform float numberOfRows;
 uniform vec2 offset;
@@ -41,7 +41,7 @@ void main (void)
 
     vec4 positionRelativeToCam = viewMatrix  * worldPosition;
 
-    gl_Position =projectionMatrix* positionRelativeToCam;
+    gl_Position = projectionMatrix * positionRelativeToCam;
     pass_textureCoords = (textureCoords/numberOfRows) + offset;
 
     vec3 actualNormal = normal;
@@ -61,7 +61,7 @@ void main (void)
     toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz;
 
     float distance = length(positionRelativeToCam.xyz);
-    visibility = exp(-pow((distance*density) , gradient));//считаем туман
+    visibility = exp(-pow((distance * density) , gradient));//считаем туман
 
     visibility = clamp(visibility, 0.0 , 1.0);
 }

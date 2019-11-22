@@ -60,8 +60,8 @@ public class SkyboxRenderer {
 
 
     private static String[] TEXTURE_FILES= {"right" , "left" , "top" , "bottom" , "back" , "front"};
-    private static String[] NIGHT_TEXTURE_FILES= {"right" , "left" , "top" , "bottom" , "back" , "front"};
-   // private static String[] NIGHT_TEXTURE_FILES= {"nightRight" , "nightLeft" , "nightTop" , "NightBottom" , "NightBack" , "NightFront"};
+   // private static String[] NIGHT_TEXTURE_FILES= {"right" , "left" , "top" , "bottom" , "back" , "front"};
+    private static String[] NIGHT_TEXTURE_FILES= {"nightRight" , "nightLeft" , "nightTop" , "NightBottom" , "NightBack" , "NightFront"};
 
     private RawModel cube;
     private int texture;
@@ -91,7 +91,7 @@ public class SkyboxRenderer {
         GL30.glBindVertexArray(cube.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         bindTextures();
-        GL11.glDrawArrays(GL11.GL_TRIANGLES , 0 , cube.getVetexCount());
+        GL11.glDrawArrays(GL11.GL_TRIANGLES , 0 , cube.getVertexCount());
         GL20.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);
 

@@ -23,7 +23,7 @@ void main(void) {
     clipSpace = projectionMatrix * viewMatrix *worldPosition;
     gl_Position = clipSpace;
 
-    textureCoords = (vec2(position.x / 2.0 + 0.5 , position.y / 2.0 + 0.5 ) )* tiling;
+    textureCoords = (vec2((position.x / 2.0) + 0.5 , (position.y / 2.0 )+ 0.5 ) )* tiling;
     toCameraVector = cameraPosition - worldPosition.xyz;
 
 }

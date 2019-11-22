@@ -7,6 +7,7 @@ import entities.Player;
 import gui.GuiRenderer;
 import gui.GuiTexture;
 import models.TexturedModel;
+import normalMappingObjConverter.NormalMappedObjLoader;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
@@ -38,17 +39,49 @@ public class MainGameLoop {
     {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
+        MasterRenderer renderer = new MasterRenderer(loader);
 
-//===============================TESTS===============================
+        List<Terrain> terrains = new ArrayList<>();
+        List<Entity> entities = new ArrayList<>();
+        List<Light> lights = new ArrayList<>();
+        List<GuiTexture> guis = new ArrayList<>();
+        List<WaterTile> waters = new ArrayList<>();
+
+        List<Entity> normalMapEntities = new ArrayList<>();
+
+
+
+//==============================PLAYER=====================================
+        ModelData watData = OBJFileLoader.loadOBJ("wat");
+
+        RawModel watModel = loader.loadToVAO(
+                watData.getVertices(),
+                watData.getTextureCoords() ,
+                watData.getNormals(),
+                watData.getIndices()
+        );
+
+        TexturedModel watTexture = new TexturedModel(watModel,new ModelTexture(loader.loadTexture("white")));
+
+
+        Player player = new Player(watTexture,
+                new Vector3f(400,0,-400),0,0,0,13);
+
+        Camera camera = new Camera(player);
+
+        entities.add(player);
+        entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
+//========================================================================================
+
+        //===============================TESTS===============================
 
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
-        List<GuiTexture> guis = new ArrayList<>();
-       // GuiTexture gui1 = new GuiTexture(loader.loadTexture("blow") , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
+        // GuiTexture gui1 = new GuiTexture(loader.loadTexture("blow") , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
         //GuiTexture gui1 = new GuiTexture(loader.loadTexture("heightMap") , new Vector2f(0.4f,0.4f) , new Vector2f(0.25f,0.25f));
-       // guis.add(gui1);
+        // guis.add(gui1);
         //guis.add(gui1);
 
         GuiRenderer guiRenderer = new GuiRenderer(loader);
@@ -74,25 +107,12 @@ public class MainGameLoop {
 
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
+        Terrain terrain = new Terrain(0,-1,loader , texturePack , blendMap , "heightMap2");
+        terrains.add(terrain);
 
 
+//==============================ENTITIES=========================================================================
 
-//==============================PLAYER=====================================
-        ModelData watData = OBJFileLoader.loadOBJ("wat");
-
-        RawModel watModel = loader.loadToVAO(
-                watData.getVertices(),
-                watData.getTextureCoords() ,
-                watData.getNormals(),
-                watData.getIndices()
-        );
-
-        TexturedModel watTexture = new TexturedModel(watModel,new ModelTexture(loader.loadTexture("white")));
-
-
-        Player player = new Player(watTexture,
-                new Vector3f(370,0,-270),0,0,0,13);
-//========================================================================================
 //--------------------------------FERN---------------------------------
 
         ModelData fernData = OBJFileLoader.loadOBJ("fern");
@@ -187,7 +207,6 @@ public class MainGameLoop {
 
         TexturedModel houseTexture = new TexturedModel(houseModel,new ModelTexture(loader.loadTexture("water")));
 
-   //================================================
 //-----------------------------------LAMP-----------------------------------------------
 
         ModelData lampData = OBJFileLoader.loadOBJ("lamp");
@@ -203,19 +222,74 @@ public class MainGameLoop {
 
 
 
+//-------------------------------TOWER---------------------------------
+
+        ModelData towerData = OBJFileLoader.loadOBJ("woodTower3");
+
+
+        RawModel towerModel = loader.loadToVAO(
+                towerData.getVertices(),
+                towerData.getTextureCoords() ,
+                towerData.getNormals(),
+                towerData.getIndices()
+        );
+
+        TexturedModel towerTexture = new TexturedModel(towerModel,new ModelTexture(loader.loadTexture("woodTowerTex1")));
+        towerTexture.getTexture().setHasTransparancey(true);
+
+
+        //-------------------------------WELL---------------------------------
+
+        ModelData wellData = OBJFileLoader.loadOBJ("well10");
+
+
+        RawModel wellModel = loader.loadToVAO(
+                wellData.getVertices(),
+                wellData.getTextureCoords() ,
+                wellData.getNormals(),
+                wellData.getIndices()
+        );
+
+        TexturedModel wellTexture = new TexturedModel(wellModel,new ModelTexture(loader.loadTexture("white")));
+
+
+        //-------------------------------SPIDER---------------------------------
+
+        ModelData spiderData = OBJFileLoader.loadOBJ("spider10");
+
+
+        RawModel spiderModel = loader.loadToVAO(
+                spiderData.getVertices(),
+                spiderData.getTextureCoords() ,
+                spiderData.getNormals(),
+                spiderData.getIndices()
+        );
+
+        TexturedModel spiderTexture = new TexturedModel(spiderModel,new ModelTexture(loader.loadTexture("spiderTex")));
+
+
+
+        //-------------------------------ROCK---------------------------------
+
+        ModelData rockData = OBJFileLoader.loadOBJ("Rock2");
+
+
+        RawModel rockModel = loader.loadToVAO(
+                rockData.getVertices(),
+                rockData.getTextureCoords() ,
+                rockData.getNormals(),
+                rockData.getIndices()
+        );
+
+        TexturedModel rockTexture = new TexturedModel(rockModel,new ModelTexture(loader.loadTexture("rock_Tex")));
 //---------------------------------------------------------
 
-        List<Terrain> terrains = new ArrayList<>();
-        Terrain terrain = new Terrain(0,-1,loader , texturePack , blendMap , "heightmap");
-        terrains.add(terrain);
-        //Terrain terrain2 = new Terrain(-1,-1,loader , texturePack , blendMap , "heightmap");
 
-        Camera camera = new Camera(player);
-        MasterRenderer renderer = new MasterRenderer(loader);
+
 
 //+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=++=+=LIGHTS==+=+=+=+=++==++=+=+=+=+=+=+=+=+
-        List<Light> lights = new ArrayList<>();
-        lights.add(new Light(new Vector3f(0,800,-3000),new Vector3f(1f,1f,1f)));//это типо солнце
+        //lights.add(new Light(new Vector3f(0,1200,-3000),new Vector3f(1f,1f,1f)));//это типо солнце
+        lights.add(new Light(new Vector3f(500,1000,-500),new Vector3f(1f,1f,1f)));//это типо солнце
         lights.add(new Light(new Vector3f(185,10,-293) , new Vector3f(4,0,0) , new Vector3f(1,0.01f,0.002f)));//а вот это фонари
         lights.add(new Light(new Vector3f(370,terrain.getHeightOfTerrain(370,-300) + 8,-300) , new Vector3f(0,4,4), new Vector3f(1,0.01f,0.002f)));
        // lights.add(new Light(new Vector3f(293,11,-305) , new Vector3f(0,0,10), new Vector3f(1,0.01f,0.002f)));
@@ -224,12 +298,27 @@ public class MainGameLoop {
 
 
  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        List<Entity> entities = new ArrayList<>();
 
         entities.add(new Entity(lampTexture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) , 0,0,0,1));
         entities.add(new Entity(lampTexture , new Vector3f(370 , terrain.getHeightOfTerrain(370,-300) , -300) , 0,0,0,1));
         entities.add(new Entity(lampTexture , new Vector3f(293 ,terrain.getHeightOfTerrain(293,-305)  , -305) , 0,0,0,1));
         entities.add(new Entity(lampTexture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) , 0,0,0,1));
+
+        Entity tower = new Entity(towerTexture , new Vector3f(403 , terrain.getHeightOfTerrain(403,-245) - 7 , -245) , 0,0,0,9);
+        entities.add(tower);
+        entities.add(tower);
+
+        entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250)  , -250) , 0,0,0,0.8f));
+        entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250) , -250) , 0,0,0,0.8f));
+
+        Entity spider = new Entity(spiderTexture ,
+                new Vector3f(300 , terrain.getHeightOfTerrain(300,-250) + 120 , -250) ,
+                0,0,0,7);
+        entities.add(spider);
+        entities.add(spider);
+
+
+
 
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -245,10 +334,6 @@ public class MainGameLoop {
                     0,random.nextFloat() *500,0,2));
         }*/
 
-        entities.add(player);
-        entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
-
-
 
         for(int i=0 ; i <100 ; i++)
         {
@@ -261,12 +346,12 @@ public class MainGameLoop {
                     0,random.nextFloat() *500,0,random.nextFloat()*1.5f));
 
 
-             /*x = random.nextFloat()*800;
+            /* x = random.nextFloat()*800;
              z = random.nextFloat()* -800 ;
-             y = terrain.getHeightOfTerrain(x,z)+5;
-            entities.add(new Entity(boxTexture,
+             y = terrain.getHeightOfTerrain(x,z)-1;
+            entities.add(new Entity(rockTexture,
                     new Vector3f(x, y,z),
-                    0,random.nextFloat() *500,0,5));*/
+                    random.nextFloat() *500,random.nextFloat() *500,random.nextFloat() *500,random.nextFloat()*10));*/
 
 
 
@@ -313,7 +398,7 @@ public class MainGameLoop {
 
         //Entity lampEnt = (new Entity(lampTexture , new Vector3f(293,-6.8f , -305) , 0 , 0, 0, 1));
        // entities.add(lampEnt);
-        Light lightLamp = (new Light( new Vector3f(293,-6.8f , -305) , new Vector3f(0,2,2) , new Vector3f(1 , 0.01f, 0.002f)));
+        Light lightLamp = (new Light( new Vector3f(293,-6.8f , -305) , new Vector3f(1,2,2) , new Vector3f(1f , 0.00001f, 0.002f)));
         lights.add(lightLamp);
 
 
@@ -322,11 +407,9 @@ public class MainGameLoop {
         //играемся с водой
 
         WaterFrameBuffers fbos = new WaterFrameBuffers();
-
         WaterShader waterShader = new WaterShader();
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader , renderer.getProjectionMatrix() , fbos);
-        List<WaterTile> waters = new ArrayList<>();
-        WaterTile water = new WaterTile(400,-400,-5);
+        WaterTile water = new WaterTile(75,-75,0);
         waters.add(water);
 
 /*        GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture() , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
@@ -338,6 +421,33 @@ public class MainGameLoop {
 
 
 //=====================================================
+        //NORMAL MAPPING ENTETIES
+        TexturedModel barrelModel  = new TexturedModel(NormalMappedObjLoader.loadOBJ("cube" , loader),
+                new ModelTexture(loader.loadTexture("bricks2")));
+        barrelModel.getTexture().setShineDamper(10);
+        barrelModel.getTexture().setReflectivity(0.5f);
+
+        barrelModel.getTexture().setNormalMap(loader.loadTexture("bricks2_normal"));
+        barrelModel.getTexture().setDepthMap(loader.loadTexture("bricks2_disp"));
+
+
+        Entity barrel = new Entity(barrelModel , new Vector3f(400,terrain.getHeightOfTerrain(400,-400)+10,-400) ,
+                15f,5f,11f,5f);
+        normalMapEntities.add(barrel);
+        normalMapEntities.add(barrel);
+//=====================================================
+        TexturedModel towerNorModel  = new TexturedModel(NormalMappedObjLoader.loadOBJ("woodTower3" , loader),
+                new ModelTexture(loader.loadTexture("woodTowerTex1")));
+        towerNorModel.getTexture().setShineDamper(10);
+        towerNorModel.getTexture().setReflectivity(0.5f);
+
+        towerNorModel.getTexture().setNormalMap(loader.loadTexture("woodTowerTex2"));
+        Entity towerNormal = new Entity(towerNorModel , new Vector3f(453,terrain.getHeightOfTerrain(453,-245),-245)  , 0,0,0,9f);
+        normalMapEntities.add(towerNormal);
+        normalMapEntities.add(towerNormal);
+
+//=====================================================
+
 
         while(!Display.isCloseRequested()){
             player.move(terrain);
@@ -347,8 +457,13 @@ public class MainGameLoop {
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 
 
+            spider.increaseRotation(0.2f , 0.0f , 0.2f);
+            //barrel.increaseRotation(0.0f , 0.09f , 0.0f);
+            towerNormal.increaseRotation(0.0f , 0.02f , 0.0f);
+            tower.increaseRotation(0.0f , 0.02f , 0.0f);
+
 //------------------------------------------------
-            //reflection
+            //ОТРАЖЕННЫЙ
             fbos.bindReflectionFrameBuffer();
             float distance = 2 * (camera.getPosition().y - water.getHeight());
             camera.getPosition().y -= distance;
@@ -356,35 +471,38 @@ public class MainGameLoop {
 
 
 
-            renderer.renderScene(entities , terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()));
+
+
+
+            renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()));
 
 
             camera.getPosition().y += distance;
             camera.invertPitch();
 
 
-            //refration
+            //ПРЕЛАМЛЁННЫЙ
             fbos.bindRefractionFrameBuffer();
-            renderer.renderScene(entities , terrains , lights , camera , new Vector4f(0,-1,0, water.getHeight()));
+            renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,-1,0, water.getHeight()));
 
 
 
-            //just render enth els
+            //ВСЁ ОСТАЛЬНОЕ
             GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
             fbos.unbindCurrentFrameBuffer();
-            renderer.renderScene(entities , terrains , lights , camera , new Vector4f(0,-1,0,100000));
+            renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,-1,0,100000));
             waterRenderer.render(waters , camera);
             guiRenderer.render(guis);
 
 
 
 
-            /*Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+            Vector3f terrainPoint = picker.getCurrentTerrainPoint();
             if(terrainPoint!=null)
             {
-                lampEnt.setPosition(terrainPoint);
+                //lampEnt.setPosition(terrainPoint);
                 lightLamp.setPosition(new Vector3f(terrainPoint.x , terrainPoint.y +5 , terrainPoint.z));
-            }*/
+            }
 
 
             DisplayManager.updateDisplay();

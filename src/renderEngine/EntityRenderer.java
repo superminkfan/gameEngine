@@ -41,7 +41,7 @@ public class EntityRenderer {
             {
                 prepareInstance(entity);
 
-                GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVetexCount(), GL11.GL_UNSIGNED_INT,0);
+                GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT,0);
 
             }
             unbindTextureModel();
@@ -89,7 +89,7 @@ public class EntityRenderer {
                 entity.getRotZ(),entity.getScale());
 
         shader.loadTransforationMatrix(tranformationMatrix);
-        shader.loadOffset(entity.getTextureXOffest(),entity.getTexturnYOffest());
+        shader.loadOffset(entity.getTextureXOffset(),entity.getTextureYOffset());
     }
 
 

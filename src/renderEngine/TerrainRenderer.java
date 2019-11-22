@@ -1,8 +1,6 @@
 package renderEngine;
 
-import entities.Entity;
 import models.RawModel;
-import models.TexturedModel;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -11,7 +9,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import shaders.TerrainShader;
 import terrains.Terrain;
-import textures.ModelTexture;
 import textures.TerrainTexturePack;
 import toolBox.Maths;
 
@@ -37,7 +34,7 @@ public class TerrainRenderer {
             loadModelMatrix(terrain);
 
             GL11.glDrawElements(GL11.GL_TRIANGLES,
-                    terrain.getModel().getVetexCount(),
+                    terrain.getModel().getVertexCount(),
                     GL11.GL_UNSIGNED_INT,0);
 
 

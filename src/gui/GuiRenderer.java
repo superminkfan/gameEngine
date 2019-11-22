@@ -41,7 +41,7 @@ public class GuiRenderer {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D , gui.getTexture());
             Matrix4f matix = Maths.createTransformationMatrix(gui.getPosition() , gui.getScale());
             shader.loadTransformation(matix);
-            GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP , 0 , quad.getVetexCount());
+            GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP , 0 , quad.getVertexCount());
         }
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);

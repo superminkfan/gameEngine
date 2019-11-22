@@ -1,15 +1,39 @@
 package textures;
 
+import org.lwjgl.util.vector.Vector3f;
+
 public class ModelTexture {
 
 private int textureID;
+private int normalMap;
+private int depthMap;
+private Vector3f wat;
+
 private float shineDamper = 100;
 private float reflectivity = 2;
 
-private boolean hasTransparancey = false;
+public boolean hasTransparancey = false;
 private boolean useFakeLighting = false;
 
 private  int numberOfRows = 1;
+
+    public int getNormalMap() {
+        return normalMap;
+    }
+
+    public void setNormalMap(int normalMap) {
+        this.normalMap = normalMap;
+    }
+
+    public int getDepthMap() {
+        return depthMap;
+    }
+
+    public void setDepthMap(int depthMap) {
+        this.depthMap = depthMap;
+    }
+
+
 
     public int getNumberOfRows() {
         return numberOfRows;

@@ -13,18 +13,23 @@ uniform sampler2D dudvMap;
 
 uniform float moveFactor;
 
-const float waveStrenght = 0.012f;
+const float waveStrength = 0.012f;
 
 
 void main(void) {
 
-    vec2 ndc = (clipSpace.xy / clipSpace.w) /2.0 + 0.5;
+    vec2 ndc = (clipSpace.xy / clipSpace.w)/2.0 + 0.5;
     vec2 reflectCoords = vec2(ndc.x , -ndc.y);
     vec2 refractCoords = vec2(ndc.x , ndc.y);
 
-    vec2 distortion1 = (texture(dudvMap , vec2(textureCoords.x + moveFactor , textureCoords.y)).rg * 2.0 - 1.0) * waveStrenght;
+   /* vec2 distortion1 = (texture(dudvMap , vec2(textureCoords.x + moveFactor , textureCoords.y)).rg * 2.0 - 1.0) * waveStrength;
     vec2 distortion2 = (texture(dudvMap , vec2(textureCoords.x + moveFactor , textureCoords.y + moveFactor)).rg * 2.0 - 1.0) * waveStrenght;
-    vec2 totalDistortion = distortion1 + distortion2;
+    vec2 totalDistortion = distortion1 + distortion2;*/
+    vec2 distortedTexCoords = texture(dudvMap, vec2(textureCoords.x + moveFactor, textureCoords.y)).rg*0.1;
+    distortedTexCoords = textureCoords + vec2(distortedTexCoords.x, distortedTexCoords.y+moveFactor);
+    vec2 totalDistortion = (texture(dudvMap, distortedTexCoords).rg * 2.0 - 1.0) * waveStrength ;
+    //* clamp(waterDepth/20.0, 0.0, 1.0);
+
 
 
     refractCoords += totalDistortion;
@@ -45,7 +50,7 @@ void main(void) {
 
 
     out_Color = mix(reflectColour,refractColour , refractiveFactor);
-    out_Color = mix(out_Color,vec4(0.0,0.3,0.5,1.0) , 0.25);
+    out_Color = mix(out_Color,vec4(0.0,0.3,0.5,1.0) , 0.3);
 
 
 
