@@ -28,6 +28,7 @@ import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -48,6 +49,9 @@ public class MainGameLoop {
         List<WaterTile> waters = new ArrayList<>();
 
         List<Entity> normalMapEntities = new ArrayList<>();
+        //-----------------------------------
+        //тестики
+
 
 
 
@@ -107,7 +111,7 @@ public class MainGameLoop {
 
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
-        Terrain terrain = new Terrain(0,-1,loader , texturePack , blendMap , "heightMap2");
+        Terrain terrain = new Terrain(0,-1,loader , texturePack , blendMap , "heightMap");
         terrains.add(terrain);
 
 

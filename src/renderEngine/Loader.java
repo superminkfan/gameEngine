@@ -33,6 +33,7 @@ public class Loader {
         for(int i = 0 ; i < textureFiles.length ; i++)
         {
             TextureData data = decodeTextureFile("res/skyBox/" + textureFiles[i] + ".png");
+
             GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i ,
                     0 , GL11.GL_RGBA , data.getWidth() , data.getHeight() , 0 ,
                     GL11.GL_RGBA , GL11.GL_UNSIGNED_BYTE , data.getBuffer() );
@@ -54,12 +55,16 @@ public class Loader {
         ByteBuffer buffer = null;
         try {
             FileInputStream in = new FileInputStream(fileName);
+
             PNGDecoder decoder = new PNGDecoder(in);
+
+
             width = decoder.getWidth();
             height = decoder.getHeight();
             buffer = ByteBuffer.allocateDirect(4 * width * height);
             decoder.decode(buffer, width * 4, PNGDecoder.Format.RGBA);
             buffer.flip();
+
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,6 +119,7 @@ public class Loader {
         Texture texture = null;
         try {
             texture = TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
+
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);   //мипмапинг
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D ,
                     GL11.GL_TEXTURE_MIN_FILTER ,
@@ -138,6 +144,36 @@ catch (java.lang.NullPointerException e)
         textures.add(textureID);
         return textureID;
     }
+
+   /* public int loadTextureDepthToNormal (String fileName)
+    {
+        Texture texture = null;
+        try {
+            texture = TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
+            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);   //мипмапинг
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D ,
+                    GL11.GL_TEXTURE_MIN_FILTER ,
+                    GL11.GL_LINEAR_MIPMAP_LINEAR);
+
+            GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS , -0.4f);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        int textureID = 0;
+        try {
+
+            textureID = texture.getTextureID();
+        }
+        catch (java.lang.NullPointerException e)
+        {
+            System.out.println(e.fillInStackTrace());
+        }
+        textures.add(textureID);
+        return textureID;
+    }*/
 
     public void cleanUp()
     {

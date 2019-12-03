@@ -12,6 +12,7 @@ in vec3 surfaceNormal;
 
 in vec3 viewPos;
 in vec3 fragPos;
+in vec2 newTC;
 
 
 
@@ -29,7 +30,7 @@ uniform float reflectivity;
 uniform vec3 skyColour;
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir);
-float height_scale = 0.1;
+float height_scale = 0.05;
 
 
 void main(void){
@@ -43,6 +44,8 @@ void main(void){
     //vec2 textureCoords = pass_textureCoordinates;
      vec3 viewDir =  viewPos - fragPos;
      vec2 textureCoords = ParallaxMapping(pass_textureCoordinates , viewDir);
+
+
 
 
     vec4 normalMapValue = 2.0 * texture(normalMap , textureCoords) - 1;

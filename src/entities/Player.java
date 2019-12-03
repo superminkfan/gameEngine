@@ -8,8 +8,8 @@ import terrains.Terrain;
 
 public class Player extends Entity {
 
-    private static final float RUN_SPEED = 100;
-    private static final float TURN_SPEED = 250;
+    private static final float RUN_SPEED = 50;
+    private static final float TURN_SPEED = 100;
     private static final float GRAVITY = -60;
     private static final float JUMP_POWER = 60;
     private static final float TERRAIN_HEIGHT = 0;

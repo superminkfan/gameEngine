@@ -16,6 +16,7 @@ out vec3 surfaceNormal;
 
 out vec3 viewPos;
 out vec3 fragPos;
+out vec2 newTC;
 
 
 
@@ -63,9 +64,11 @@ void main(void){
     toCameraVector = toTangentSpace* (-positionRelativeToCam.xyz);
 
 //***********************************************************
-    vec3 watFragPos = (transformationMatrix * vec4(position,1.0)).xyz;
+    //vec3 watFragPos = (transformationMatrix * vec4(position,1.0)).xyz;
+    vec3 watFragPos = vec3(vec4(toTangentSpace * position , 1.0) * viewMatrix * transformationMatrix *projectionMatrix);
     vec3 watViewPos =  toCameraVector;
     //vec3 watViewPos =  toCameraVector;
+    newTC = textureCoordinates;
 
 
 
