@@ -293,7 +293,7 @@ public class MainGameLoop {
 
 //+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=++=+=LIGHTS==+=+=+=+=++==++=+=+=+=+=+=+=+=+
         //lights.add(new Light(new Vector3f(0,1200,-3000),new Vector3f(1f,1f,1f)));//это типо солнце
-        lights.add(new Light(new Vector3f(500,1000,-500),new Vector3f(1f,1f,1f)));//это типо солнце
+        lights.add(new Light(new Vector3f(5000,7000,-4000),new Vector3f(1f,1f,1f)));//это типо солнце
         lights.add(new Light(new Vector3f(185,10,-293) , new Vector3f(4,0,0) , new Vector3f(1,0.01f,0.002f)));//а вот это фонари
         lights.add(new Light(new Vector3f(370,terrain.getHeightOfTerrain(370,-300) + 8,-300) , new Vector3f(0,4,4), new Vector3f(1,0.01f,0.002f)));
        // lights.add(new Light(new Vector3f(293,11,-305) , new Vector3f(0,0,10), new Vector3f(1,0.01f,0.002f)));
@@ -413,7 +413,7 @@ public class MainGameLoop {
         WaterFrameBuffers fbos = new WaterFrameBuffers();
         WaterShader waterShader = new WaterShader();
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader , renderer.getProjectionMatrix() , fbos);
-        WaterTile water = new WaterTile(75,-75,0);
+        WaterTile water = new WaterTile(100,-100,-6);
         waters.add(water);
 
 /*        GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture() , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
@@ -426,17 +426,17 @@ public class MainGameLoop {
 
 //=====================================================
         //NORMAL MAPPING ENTETIES
-        TexturedModel barrelModel  = new TexturedModel(NormalMappedObjLoader.loadOBJ("cube" , loader),
+        TexturedModel barrelModel  = new TexturedModel(NormalMappedObjLoader.loadOBJ("sphere1" , loader),
                 new ModelTexture(loader.loadTexture("bricks2")));
-        barrelModel.getTexture().setShineDamper(10);
-        barrelModel.getTexture().setReflectivity(0.5f);
+        barrelModel.getTexture().setShineDamper(3);
+        barrelModel.getTexture().setReflectivity(0.7f);
 
-        barrelModel.getTexture().setNormalMap(loader.loadTexture("bricks2_normal"));
+        barrelModel.getTexture().setNormalMap(loader.loadTexture("bricks2_normal"));//wat3
         barrelModel.getTexture().setDepthMap(loader.loadTexture("bricks2_disp"));
 
 
-        Entity barrel = new Entity(barrelModel , new Vector3f(400,terrain.getHeightOfTerrain(400,-400)+10,-400) ,
-                15f,5f,11f,5f);
+        Entity barrel = new Entity(barrelModel , new Vector3f(400,terrain.getHeightOfTerrain(400,-400)+35,-400) ,
+                0f,0f,0f,5f);
         normalMapEntities.add(barrel);
         normalMapEntities.add(barrel);
 //=====================================================
@@ -462,7 +462,7 @@ public class MainGameLoop {
 
 
             spider.increaseRotation(0.2f , 0.0f , 0.2f);
-            //barrel.increaseRotation(0.0f , 0.09f , 0.0f);
+          // barrel.increaseRotation(0.01f , 0.09f , 0.1f);
             towerNormal.increaseRotation(0.0f , 0.02f , 0.0f);
             tower.increaseRotation(0.0f , 0.02f , 0.0f);
 

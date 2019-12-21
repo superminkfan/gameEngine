@@ -16,7 +16,6 @@ out vec3 surfaceNormal;
 
 out vec3 viewPos;
 out vec3 fragPos;
-out vec2 newTC;
 
 
 
@@ -32,6 +31,7 @@ const float density = 0;
 const float gradient = 5.0;
 
 uniform vec4 plane;
+uniform vec3 test;
 
 
 void main(void){
@@ -64,18 +64,16 @@ void main(void){
     toCameraVector = toTangentSpace* (-positionRelativeToCam.xyz);
 
 //***********************************************************
-    //vec3 watFragPos = (transformationMatrix * vec4(position,1.0)).xyz;
-    vec3 watFragPos = vec3(vec4(toTangentSpace * position , 1.0) * viewMatrix * transformationMatrix *projectionMatrix);
-    vec3 watViewPos =  toCameraVector;
-    //vec3 watViewPos =  toCameraVector;
-    newTC = textureCoordinates;
+    vec3 watViewPos = normalize(test);
+    vec3 watFragPos =  vec3(modelViewMatrix * vec4(position, 1.0));
+
+    mat4 model = inverse(viewMatrix) * transformationMatrix;
+    //vec3 watViewPos = normalize(test);
+    //vec3 watFragPos =  vec3(positionRelativeToCam);
 
 
-
-
-
-    fragPos =   normalize(watFragPos);
-    viewPos =   normalize(watViewPos);
+    fragPos =   toTangentSpace * watFragPos;
+    viewPos =   toTangentSpace * watViewPos;
 //***********************************************************
     float distance = length(positionRelativeToCam.xyz);
     visibility = exp(-pow((distance*density),gradient));

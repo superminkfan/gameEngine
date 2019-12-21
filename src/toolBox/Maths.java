@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 public class Maths {
 
 
-//ебаный класс особой математической магии
+// класс особой математической магии
 
     public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) {
         float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);

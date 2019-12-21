@@ -12,7 +12,6 @@ in vec3 surfaceNormal;
 
 in vec3 viewPos;
 in vec3 fragPos;
-in vec2 newTC;
 
 
 
@@ -30,7 +29,7 @@ uniform float reflectivity;
 uniform vec3 skyColour;
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir);
-float height_scale = 0.05;
+float height_scale = 0.1;
 
 
 void main(void){
@@ -43,13 +42,9 @@ void main(void){
 
     //vec2 textureCoords = pass_textureCoordinates;
      vec3 viewDir =  viewPos - fragPos;
-     vec2 textureCoords = ParallaxMapping(pass_textureCoordinates , viewDir);
-
-
-
-
-    vec4 normalMapValue = 2.0 * texture(normalMap , textureCoords) - 1;
-    vec3 unitNormal = normalize(normalMapValue.rgb);
+     vec2 textureCoords = ParallaxMapping(pass_textureCoordinates , normalize(viewDir));
+     vec4 normalMapValue = 2.0 * texture(normalMap , textureCoords) - 1;
+     vec3 unitNormal = normalize(normalMapValue.rgb);
     //vec3 unitNormal = normalize(surfaceNormal);
 
     //***********************************************************************
@@ -84,42 +79,11 @@ void main(void){
     out_Color =  vec4(totalDiffuse,1.0) * textureColour + vec4(totalSpecular,1.0);
     out_Color = mix(vec4(skyColour,1.0),out_Color, visibility);
     //out_Color = normalMapValue;
-    //out_Color = vec4(pass_tangent, 1.0);
+//   out_Color = vec4(pass_tangent, 1.0);
 
 }
 
-/*vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
-{
-    // количество слоев глубины
-    const float numLayers = 50;
-    // размер каждого слоя
-    float layerDepth = 1.0 / numLayers;
-    // глубина текущего слоя
-    float currentLayerDepth = 0.0;
-    // величина шага смещения текстурных координат на каждом слое
-    // расчитывается на основе вектора P
-    vec2 P = viewDir.xy * height_scale;
-    vec2 deltaTexCoords = P / numLayers;
 
-
-    // начальная инициализация
-    vec2  currentTexCoords     = texCoords;
-    float currentDepthMapValue = texture(depthMap, currentTexCoords).a;
-
-    while(currentLayerDepth < currentDepthMapValue)
-    {
-        // смещаем текстурные координаты вдоль вектора P
-        currentTexCoords -= deltaTexCoords;
-        // делаем выборку из карты глубин в текущих текстурных координатах
-        currentDepthMapValue = texture(depthMap, currentTexCoords).r;
-        // рассчитываем глубину следующего слоя
-        currentLayerDepth += layerDepth;
-    }
-
-
-
-    return currentTexCoords;
-}*/
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
@@ -163,7 +127,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
     currentLayerDepth -= layerDepth;
 
     // установим максимум итераций поиска…
-    const int _reliefSteps = 5;
+    const int _reliefSteps = 10;
     int currentStep = _reliefSteps;
     while (currentStep > 0) {
         currentDepthMapValue = texture(depthMap, currentTexCoords).r;
