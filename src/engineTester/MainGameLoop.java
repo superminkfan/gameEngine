@@ -1,11 +1,15 @@
 package engineTester;
 
+import animatedModel.AnimatedModel;
+import animation.Animation;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
 import gui.GuiRenderer;
 import gui.GuiTexture;
+import loaders.AnimatedModelLoader;
+import loaders.AnimationLoader;
 import models.TexturedModel;
 import normalMappingObjConverter.NormalMappedObjLoader;
 import objConverter.ModelData;
@@ -13,22 +17,22 @@ import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 import renderEngine.*;
 import models.RawModel;
+import renderEngine.rendererAnim.AnimatedModelRenderer;
 import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolBox.MousePicker;
+import utils.MyFile;
 import water.WaterFrameBuffers;
 import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -41,6 +45,14 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
         MasterRenderer renderer = new MasterRenderer(loader);
+        //************************************************************************************
+
+
+
+
+
+        //************************************************************************************
+
 
         List<Terrain> terrains = new ArrayList<>();
         List<Entity> entities = new ArrayList<>();
@@ -79,7 +91,7 @@ public class MainGameLoop {
 
         //===============================TESTS===============================
 
-        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 
 
@@ -413,7 +425,7 @@ public class MainGameLoop {
         WaterFrameBuffers fbos = new WaterFrameBuffers();
         WaterShader waterShader = new WaterShader();
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader , renderer.getProjectionMatrix() , fbos);
-        WaterTile water = new WaterTile(100,-100,-6);
+        WaterTile water = new WaterTile(100,-100,-3);
         waters.add(water);
 
 /*        GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture() , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
@@ -437,8 +449,8 @@ public class MainGameLoop {
 
         Entity barrel = new Entity(barrelModel , new Vector3f(400,terrain.getHeightOfTerrain(400,-400)+35,-400) ,
                 0f,0f,0f,5f);
-        normalMapEntities.add(barrel);
-        normalMapEntities.add(barrel);
+        //normalMapEntities.add(barrel);
+        //normalMapEntities.add(barrel);
 //=====================================================
         TexturedModel towerNorModel  = new TexturedModel(NormalMappedObjLoader.loadOBJ("woodTower3" , loader),
                 new ModelTexture(loader.loadTexture("woodTowerTex1")));
@@ -451,6 +463,32 @@ public class MainGameLoop {
         normalMapEntities.add(towerNormal);
 
 //=====================================================
+
+
+
+
+
+
+
+
+        //===============================TESTS===============================
+
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        AnimatedModelRenderer entityRenderer = new AnimatedModelRenderer();
+
+
+
+        AnimatedModel entity = AnimatedModelLoader.
+                loadEntity(new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.MODEL_FILE),
+                new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.DIFFUSE_FILE));
+
+        Animation animation = AnimationLoader.
+                loadAnimation(new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.ANIM_FILE));
+        entity.doAnimation(animation);
+
+
+
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
         while(!Display.isCloseRequested()){
@@ -479,7 +517,9 @@ public class MainGameLoop {
 
 
             renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()));
-
+entity.update();
+            entityRenderer.render(entity, camera, new Vector3f(5000,7000,-4000) , lights,
+                    new Vector4f(0,1,0, -water.getHeight()));
 
             camera.getPosition().y += distance;
             camera.invertPitch();
@@ -488,6 +528,8 @@ public class MainGameLoop {
             //ПРЕЛАМЛЁННЫЙ
             fbos.bindRefractionFrameBuffer();
             renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,-1,0, water.getHeight()));
+            entityRenderer.render(entity, camera, new Vector3f(5000,7000,-4000) , lights,
+                    new Vector4f(0,-1,0, water.getHeight())   );
 
 
 
@@ -495,6 +537,22 @@ public class MainGameLoop {
             GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
             fbos.unbindCurrentFrameBuffer();
             renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,-1,0,100000));
+
+            entityRenderer.render(entity, camera, new Vector3f(5000,7000,-4000), lights,
+                    new Vector4f(0,-1,0,100000));
+            //нужно что то сделать в шедере а то
+            //походу расположение он не понимает
+
+            /*
+            вот что нужно сделать
+
+            добавить матрицы в шейдеры
+            создать эти матрицы
+            желательно сделать все заново а то нахуевертио уже
+            запихнуть все в мастер рендерер в рендерСин
+            в шейдерах сделать мировое расположение
+             */
+
             waterRenderer.render(waters , camera);
             guiRenderer.render(guis);
 
@@ -514,6 +572,8 @@ public class MainGameLoop {
 
         }
         fbos.cleanUp();
+
+        entityRenderer.cleanUp();
         guiRenderer.cleanUp();
         waterShader.cleanUp();
         renderer.cleanUp();

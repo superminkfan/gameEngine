@@ -9,6 +9,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
+import renderEngine.rendererAnim.AnimatedModelShader;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import skybox.SkyboxRenderer;
@@ -40,7 +41,7 @@ public class MasterRenderer {
 
 
 
-    private NormalMappingRenderer normalMapRendere;
+    private NormalMappingRenderer normalMapRenderer;
 
 
 
@@ -55,6 +56,13 @@ public class MasterRenderer {
     private SkyboxRenderer skyboxRenderer;
 
 
+
+
+
+
+
+    private AnimatedModelShader animShader = new AnimatedModelShader();
+
     public MasterRenderer(Loader loader) {
 
         enableCulling();
@@ -63,7 +71,9 @@ public class MasterRenderer {
         renderer = new EntityRenderer(shader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(loader,projectionMatrix);
-        normalMapRendere = new NormalMappingRenderer(projectionMatrix);
+        normalMapRenderer = new NormalMappingRenderer(projectionMatrix);
+        //entityRenderer = new AnimatedModelRenderer();
+
 
     }
 
@@ -116,7 +126,8 @@ public class MasterRenderer {
         renderer.render(entities);
         shader.stop();
 
-        normalMapRendere.render(normalMapEntities,clipPlane,lights,camera);
+        normalMapRenderer.render(normalMapEntities,clipPlane,lights,camera);
+
 
         terrainShader.start();
         terrainShader.loadClipPlane(clipPlane);
@@ -175,7 +186,7 @@ public class MasterRenderer {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
-    private void createProjectionMatrix()
+    public void createProjectionMatrix()
     {
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
@@ -196,7 +207,7 @@ public class MasterRenderer {
     {
         shader.cleanUp();
         terrainShader.cleanUp();
-        normalMapRendere.cleanUp();
+        normalMapRenderer.cleanUp();
     }
 
 }
