@@ -3,12 +3,14 @@ package renderEngine;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.animatedModel.AnimatedModel;
 import models.TexturedModel;
 import normalMappingRenderer.NormalMappingRenderer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
+import renderEngine.rendererAnim.AnimatedModelRenderer;
 import renderEngine.rendererAnim.AnimatedModelShader;
 import shaders.StaticShader;
 import shaders.TerrainShader;
@@ -45,8 +47,18 @@ public class MasterRenderer {
 
 
 
+    private AnimatedModelShader animShader = new AnimatedModelShader();
+    private AnimatedModelRenderer animRenderer;
+
+
+
     private Map<TexturedModel, List<Entity>> entities =
             new HashMap<TexturedModel, List<Entity>>();
+
+
+    //вот тут новый лист аним ентетис
+    private List<AnimatedModel> animEntities = new ArrayList<>();
+
     private Map<TexturedModel, List<Entity>> normalMapEntities =
             new HashMap<TexturedModel, List<Entity>>();
 
@@ -61,7 +73,6 @@ public class MasterRenderer {
 
 
 
-    private AnimatedModelShader animShader = new AnimatedModelShader();
 
     public MasterRenderer(Loader loader) {
 
@@ -72,7 +83,7 @@ public class MasterRenderer {
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(loader,projectionMatrix);
         normalMapRenderer = new NormalMappingRenderer(projectionMatrix);
-        //entityRenderer = new AnimatedModelRenderer();
+        animRenderer = new AnimatedModelRenderer(animShader , projectionMatrix);
 
 
     }
@@ -95,7 +106,8 @@ public class MasterRenderer {
     }
 
 
-    public void renderScene(List<Entity> entities ,List<Entity> normalEntities,  List<Terrain> terrains , List<Light> lights ,
+    public void renderScene(List<Entity> entities , List<Entity> normalEntities, List<AnimatedModel> animEnt ,
+                            List<Terrain> terrains , List<Light> lights ,
                             Camera camera , Vector4f clipPlane)
     {
         for(Terrain terrain:terrains){
@@ -105,10 +117,16 @@ public class MasterRenderer {
         for(Entity entity:entities){
             processEntity(entity);
         }
+
+
+
         for(Entity entity : normalEntities)
         {
             processNormalMapEntity(entity);
         }
+        this.animEntities=animEnt;
+
+        //вот тут добавь просесс аним ентети
         render(lights,camera,clipPlane);
 
     }
@@ -129,6 +147,19 @@ public class MasterRenderer {
         normalMapRenderer.render(normalMapEntities,clipPlane,lights,camera);
 
 
+        //*********************************
+        //гдето здесь шейдер анимаций его подготовка и загрузка параметров
+        animShader.start();
+
+        animShader.loadClipPlane(clipPlane);
+        animShader.loadSkuColourVariable(RED, GREEN , BLUE);
+        animShader.loadLights(lights);
+        animShader.loadViewMatrix(camera);
+        animRenderer.render(animEntities);//костыль!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+
+        animShader.stop();
+        //*********************************
+
         terrainShader.start();
         terrainShader.loadClipPlane(clipPlane);
         terrainShader.loadSkuColourVariable(RED, GREEN , BLUE);
@@ -142,6 +173,7 @@ public class MasterRenderer {
         entities.clear();
         normalMapEntities.clear();
 
+
     }
 
 
@@ -150,6 +182,8 @@ public class MasterRenderer {
         terrains.add(terrain);
     }
 
+
+    //вот тут просес аним ентети
 
     public void processEntity(Entity entity)
     {
@@ -164,6 +198,9 @@ public class MasterRenderer {
             entities.put(entityModel,newBatch);
         }
     }
+
+
+
 
     public void processNormalMapEntity(Entity entity)
     {
@@ -206,6 +243,7 @@ public class MasterRenderer {
     public void cleanUp()
     {
         shader.cleanUp();
+        animShader.cleanUp();
         terrainShader.cleanUp();
         normalMapRenderer.cleanUp();
     }

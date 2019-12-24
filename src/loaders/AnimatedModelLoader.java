@@ -1,7 +1,7 @@
 package loaders;
 
-import animatedModel.AnimatedModel;
-import animatedModel.Joint;
+import entities.animatedModel.AnimatedModel;
+import entities.animatedModel.Joint;
 import colladaLoader.ColladaLoader;
 import dataStructures.AnimatedModelData;
 import dataStructures.JointData;

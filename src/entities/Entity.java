@@ -1,11 +1,13 @@
 package entities;
 
+import entities.animatedModel.AnimatedModel;
 import models.TexturedModel;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Entity {
 
     private TexturedModel model;
+    private AnimatedModel animatedModel;
     private Vector3f position;
     private float rotX, rotY, rotZ;
     private float scale;
@@ -20,6 +22,15 @@ public class Entity {
         this.rotY = rotY;
         this.rotZ = rotZ;
         this.scale = scale;
+    }
+
+    public Entity(AnimatedModel model) {
+        this.animatedModel = model;
+        this.position = model.getPosition();
+        this.rotX = model.getRotX();
+        this.rotY = model.getRotY();
+        this.rotZ = model.getRotZ();
+        this.scale = model.getScale();
     }
 
     public Entity(TexturedModel model, int textureIndex , Vector3f position, float rotX, float rotY, float rotZ, float scale) {

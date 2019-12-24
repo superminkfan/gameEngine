@@ -18,7 +18,7 @@ uniform vec3 lightDirection;
 
 uniform vec3 lightColour[4];
 uniform vec3 attenuation[4];
-const float shineDamper = 10;
+const float shineDamper = 20;
 const float reflectivity = 0.7f;
 uniform vec3 skyColour;
 

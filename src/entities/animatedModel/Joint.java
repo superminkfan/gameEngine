@@ -1,4 +1,4 @@
-package animatedModel;
+package entities.animatedModel;
 
 import org.lwjgl.util.vector.Matrix4f;
 

@@ -1,5 +1,6 @@
 package entities;
 
+import entities.animatedModel.AnimatedModel;
 import models.TexturedModel;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
@@ -24,10 +25,18 @@ public class Player extends Entity {
 
 
 
+
+    //нужен новый контруктор чтоб с анимейтид модел
+
     public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         super(model, position, rotX, rotY, rotZ, scale);
 
 
+
+    }
+
+    public Player(AnimatedModel model) {
+        super(model);
 
     }
 
@@ -48,7 +57,7 @@ public class Player extends Entity {
         super.increasePosition(0,upwardsSpeed*DisplayManager.getFrameTimeSecinds() , 0);
 
 
-        float terreinHeight = terrain.getHeightOfTerrain(super.getPosition().x , super.getPosition().z);
+        float terreinHeight = terrain.getHeightOfTerrain(super.getPosition().x , super.getPosition().z)+7;//опасно!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (super.getPosition().y < terreinHeight)
             //здесь будет проверка на
             // соприкосновение с землёй

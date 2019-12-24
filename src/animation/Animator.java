@@ -1,7 +1,7 @@
 package animation;
 
-import animatedModel.AnimatedModel;
-import animatedModel.Joint;
+import entities.animatedModel.AnimatedModel;
+import entities.animatedModel.Joint;
 import org.lwjgl.util.vector.Matrix4f;
 import renderEngine.DisplayManager;
 

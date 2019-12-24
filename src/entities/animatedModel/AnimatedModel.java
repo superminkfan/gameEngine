@@ -1,9 +1,10 @@
-package animatedModel;
+package entities.animatedModel;
 
 import animation.Animation;
 import animation.Animator;
 import openglObjects.Vao;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import textures.Texture;
 
 /**
@@ -19,14 +20,19 @@ import textures.Texture;
 public class AnimatedModel {
 
 	// skin
-	private final Vao model;
-	private final Texture texture;
+	private  Vao model;
+	private  Texture texture;
 
 	// skeleton
-	private final Joint rootJoint;
-	private final int jointCount;
+	private  Joint rootJoint;
+	private  int jointCount;
 
-	private final Animator animator;
+	private  Animator animator;
+
+	private Vector3f position;
+	private float rotX, rotY, rotZ;
+	private float scale;
+
 
 	/**
 
@@ -34,10 +40,11 @@ public class AnimatedModel {
 	 * для всех суставов считается в этом конструкторе. Bind transform это
 	 * просто оригинальная
 	 *
-	 * 
 	 *
-	 * 
+	 *
+	 *
 	 */
+
 	public AnimatedModel(Vao model, Texture texture, Joint rootJoint, int jointCount) {
 		this.model = model;
 		this.texture = texture;
@@ -47,12 +54,51 @@ public class AnimatedModel {
 		rootJoint.calcInverseBindTransform(new Matrix4f());
 	}
 
+	public AnimatedModel(AnimatedModel animModel,
+						 Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+		this.model = animModel.getModel();
+		this.texture = animModel.getTexture();
+		this.rootJoint = animModel.getRootJoint();
+		this.jointCount = animModel.getJointCount();
+		this.animator = animModel.getAnimator();
+		this.position = position;
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale = scale;
+	}
 
 	public Vao getModel() {
 		return model;
 	}
 
+	public int getJointCount() {
+		return jointCount;
+	}
 
+	public Animator getAnimator() {
+		return animator;
+	}
+
+	public Vector3f getPosition() {
+		return position;
+	}
+
+	public float getRotX() {
+		return rotX;
+	}
+
+	public float getRotY() {
+		return rotY;
+	}
+
+	public float getRotZ() {
+		return rotZ;
+	}
+
+	public float getScale() {
+		return scale;
+	}
 
 	public Texture getTexture() {
 		return texture;
@@ -75,7 +121,7 @@ public class AnimatedModel {
 	}
 
 
-	public void update() {
+	public void update() {//вот тут сделай чтоб обрабатывался список
 		animator.update();
 	}
 

@@ -1,6 +1,6 @@
 package engineTester;
 
-import animatedModel.AnimatedModel;
+import entities.animatedModel.AnimatedModel;
 import animation.Animation;
 import entities.Camera;
 import entities.Entity;
@@ -56,6 +56,7 @@ public class MainGameLoop {
 
         List<Terrain> terrains = new ArrayList<>();
         List<Entity> entities = new ArrayList<>();
+        List<AnimatedModel> animEntities = new ArrayList<>();
         List<Light> lights = new ArrayList<>();
         List<GuiTexture> guis = new ArrayList<>();
         List<WaterTile> waters = new ArrayList<>();
@@ -80,13 +81,32 @@ public class MainGameLoop {
         TexturedModel watTexture = new TexturedModel(watModel,new ModelTexture(loader.loadTexture("white")));
 
 
-        Player player = new Player(watTexture,
-                new Vector3f(400,0,-400),0,0,0,13);
+       /* Player player = new Player(watTexture,
+                new Vector3f(400,0,-400),0,0,0,13);*/
+
+
+        AnimatedModel entity = AnimatedModelLoader.
+                loadEntity(new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.MODEL_FILE),
+                        new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.DIFFUSE_FILE));
+        Animation animation = AnimationLoader.
+                loadAnimation(new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.ANIM_FILE));
+        entity.doAnimation(animation);
+        //ВОТ ТУТ  НУЖНО ПОДУМАТЬ КАК ОСТАНАВЛИВАТЬ АНИМАЦИЮ
+
+        AnimatedModel animatedModel = new AnimatedModel(entity,new Vector3f(400,0,-400) ,
+                0f,0f,0f,10f);
+
+
+
+        Player player = new Player(animatedModel);
 
         Camera camera = new Camera(player);
 
-        entities.add(player);
-        entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
+        animEntities.add(animatedModel);
+        animEntities.add(animatedModel);
+
+       // entities.add(player);
+        //entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
 //========================================================================================
 
         //===============================TESTS===============================
@@ -474,17 +494,33 @@ public class MainGameLoop {
         //===============================TESTS===============================
 
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        AnimatedModelRenderer entityRenderer = new AnimatedModelRenderer();
 
 
+        //тут самое интересное
+        //расположение
+        //попробывать чтоб это был Player
 
-        AnimatedModel entity = AnimatedModelLoader.
+
+      /*  AnimatedModel entity = AnimatedModelLoader.
                 loadEntity(new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.MODEL_FILE),
                 new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.DIFFUSE_FILE));
-
         Animation animation = AnimationLoader.
                 loadAnimation(new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.ANIM_FILE));
         entity.doAnimation(animation);
+        //ВОТ ТУТ  НУЖНО ПОДУМАТЬ КАК ОСТАНАВЛИВАТЬ АНИМАЦИЮ
+
+        AnimatedModel animatedModel = new AnimatedModel(entity,new Vector3f(400,10,-400) ,
+                0f,0f,0f,10f);
+        animEntities.add(animatedModel);
+*/
+        AnimatedModel animatedModel1= new AnimatedModel(entity,new Vector3f(380,10,-400) ,
+                0f,0f,0f,10f);
+        animEntities.add(animatedModel1);
+
+
+
+
+
 
 
 
@@ -515,11 +551,9 @@ public class MainGameLoop {
 
 
 
+            entity.update();
+            renderer.renderScene(entities ,normalMapEntities, animEntities ,terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()));
 
-            renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()));
-entity.update();
-            entityRenderer.render(entity, camera, new Vector3f(5000,7000,-4000) , lights,
-                    new Vector4f(0,1,0, -water.getHeight()));
 
             camera.getPosition().y += distance;
             camera.invertPitch();
@@ -527,19 +561,17 @@ entity.update();
 
             //ПРЕЛАМЛЁННЫЙ
             fbos.bindRefractionFrameBuffer();
-            renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,-1,0, water.getHeight()));
-            entityRenderer.render(entity, camera, new Vector3f(5000,7000,-4000) , lights,
-                    new Vector4f(0,-1,0, water.getHeight())   );
+            renderer.renderScene(entities ,normalMapEntities, animEntities, terrains , lights , camera , new Vector4f(0,-1,0, water.getHeight()));
+
 
 
 
             //ВСЁ ОСТАЛЬНОЕ
             GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
             fbos.unbindCurrentFrameBuffer();
-            renderer.renderScene(entities ,normalMapEntities, terrains , lights , camera , new Vector4f(0,-1,0,100000));
+            renderer.renderScene(entities ,normalMapEntities, animEntities, terrains , lights , camera , new Vector4f(0,-1,0,100000));
 
-            entityRenderer.render(entity, camera, new Vector3f(5000,7000,-4000), lights,
-                    new Vector4f(0,-1,0,100000));
+
             //нужно что то сделать в шедере а то
             //походу расположение он не понимает
 
@@ -573,7 +605,6 @@ entity.update();
         }
         fbos.cleanUp();
 
-        entityRenderer.cleanUp();
         guiRenderer.cleanUp();
         waterShader.cleanUp();
         renderer.cleanUp();

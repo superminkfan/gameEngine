@@ -1,9 +1,12 @@
 package renderEngine.rendererAnim;
 
+import entities.Camera;
 import entities.Light;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 import shaders.*;
+import toolBox.Maths;
 import utils.MyFile;
 
 import java.util.List;
@@ -33,7 +36,6 @@ public class AnimatedModelShader extends ShaderProgram {
 	//вот тут********************************************************************************
 
 
-	protected UniformVec3 lightDirection = new UniformVec3("lightDirection");
 	protected UniformMat4Array jointTransforms = new UniformMat4Array("jointTransforms", MAX_JOINTS);
 	private UniformSampler diffuseMap = new UniformSampler("diffuseMap");
 
@@ -41,7 +43,7 @@ public class AnimatedModelShader extends ShaderProgram {
 	public AnimatedModelShader() {
 		super(VERTEX_SHADER, FRAGMENT_SHADER, "in_position", "in_textureCoords", "in_normal", "in_jointIndices",
 				"in_weights");
-		super.storeAllUniformLocations(projectionViewMatrix, diffuseMap, lightDirection, jointTransforms,
+		super.storeAllUniformLocations(projectionViewMatrix, diffuseMap, jointTransforms,
 				transformationMatrix, projectionMatrix, viewMatrix);//и тут****************************
 
 
@@ -77,6 +79,15 @@ public class AnimatedModelShader extends ShaderProgram {
 	protected void bindAttributes() {
 
 	}
+
+	public void loadViewMatrix(Camera camera)
+	{
+		Matrix4f vm = Maths.createViewMatrix(camera);
+		this.viewMatrix.loadMatrix(vm);
+		//super.loadMatrix(location_viewMatrix , viewMatrix);
+	}
+
+
 
 	public void loadLights(List<Light> lights) {
 		for (int i = 0; i < MAX_LIGHTS; i++) {

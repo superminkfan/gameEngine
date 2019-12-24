@@ -1,7 +1,5 @@
 package animation;
 
-import animatedModel.AnimatedModel;
-
 
 public class Animation {
 
