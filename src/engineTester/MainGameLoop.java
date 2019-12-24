@@ -60,7 +60,6 @@ public class MainGameLoop {
         List<Light> lights = new ArrayList<>();
         List<GuiTexture> guis = new ArrayList<>();
         List<WaterTile> waters = new ArrayList<>();
-
         List<Entity> normalMapEntities = new ArrayList<>();
         //-----------------------------------
         //тестики
@@ -81,8 +80,8 @@ public class MainGameLoop {
         TexturedModel watTexture = new TexturedModel(watModel,new ModelTexture(loader.loadTexture("white")));
 
 
-       /* Player player = new Player(watTexture,
-                new Vector3f(400,0,-400),0,0,0,13);*/
+        Player player = new Player(watTexture,
+                new Vector3f(400,0,-400),0,0,0,13);
 
 
         AnimatedModel entity = AnimatedModelLoader.
@@ -98,15 +97,15 @@ public class MainGameLoop {
 
 
 
-        Player player = new Player(animatedModel);
+        Player player1 = new Player(animatedModel);
 
         Camera camera = new Camera(player);
 
         animEntities.add(animatedModel);
         animEntities.add(animatedModel);
 
-       // entities.add(player);
-        //entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
+        entities.add(player);
+        entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
 //========================================================================================
 
         //===============================TESTS===============================
@@ -513,14 +512,9 @@ public class MainGameLoop {
                 0f,0f,0f,10f);
         animEntities.add(animatedModel);
 */
-        AnimatedModel animatedModel1= new AnimatedModel(entity,new Vector3f(380,10,-400) ,
+        AnimatedModel animatedModel1= new AnimatedModel(entity,new Vector3f(390,7,-400) ,
                 0f,0f,0f,10f);
         animEntities.add(animatedModel1);
-
-
-
-
-
 
 
 
@@ -539,6 +533,7 @@ public class MainGameLoop {
           // barrel.increaseRotation(0.01f , 0.09f , 0.1f);
             towerNormal.increaseRotation(0.0f , 0.02f , 0.0f);
             tower.increaseRotation(0.0f , 0.02f , 0.0f);
+            animatedModel1.increaseRotation(0.0f , 0.2f , 0.0f);
 
 //------------------------------------------------
             //ОТРАЖЕННЫЙ
@@ -546,9 +541,6 @@ public class MainGameLoop {
             float distance = 2 * (camera.getPosition().y - water.getHeight());
             camera.getPosition().y -= distance;
             camera.invertPitch();
-
-
-
 
 
             entity.update();
@@ -572,18 +564,7 @@ public class MainGameLoop {
             renderer.renderScene(entities ,normalMapEntities, animEntities, terrains , lights , camera , new Vector4f(0,-1,0,100000));
 
 
-            //нужно что то сделать в шедере а то
-            //походу расположение он не понимает
 
-            /*
-            вот что нужно сделать
-
-            добавить матрицы в шейдеры
-            создать эти матрицы
-            желательно сделать все заново а то нахуевертио уже
-            запихнуть все в мастер рендерер в рендерСин
-            в шейдерах сделать мировое расположение
-             */
 
             waterRenderer.render(waters , camera);
             guiRenderer.render(guis);

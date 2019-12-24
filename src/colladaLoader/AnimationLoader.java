@@ -86,7 +86,7 @@ public class AnimationLoader {
 			transform.load(buffer);
 			transform.transpose();
 			if(root){
-				//because up axis in Blender is different to up axis in game
+				//потому что вверж в блендере это низ
 				Matrix4f.mul(CORRECTION, transform, transform);
 			}
 			keyFrames[i].addJointTransform(new JointTransformData(jointName, transform));

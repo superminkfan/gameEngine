@@ -57,7 +57,7 @@ public class Player extends Entity {
         super.increasePosition(0,upwardsSpeed*DisplayManager.getFrameTimeSecinds() , 0);
 
 
-        float terreinHeight = terrain.getHeightOfTerrain(super.getPosition().x , super.getPosition().z)+7;//опасно!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        float terreinHeight = terrain.getHeightOfTerrain(super.getPosition().x , super.getPosition().z);//опасно!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (super.getPosition().y < terreinHeight)
             //здесь будет проверка на
             // соприкосновение с землёй

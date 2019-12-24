@@ -13,7 +13,6 @@ in float visibility;
 out vec4 out_Colour;
 
 uniform sampler2D diffuseMap;
-uniform vec3 lightDirection;
 
 
 uniform vec3 lightColour[4];

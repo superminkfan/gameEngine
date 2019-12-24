@@ -42,8 +42,9 @@ void main(void){
 
 	vec4 worldPosition = transformationMatrix * vec4(in_position.x , in_position.y , in_position.z , 1.0);
 	vec4 positionRelativeToCam = viewMatrix  * worldPosition;
-	//gl_Position = projectionMatrix * positionRelativeToCam;
+
 	gl_ClipDistance[0] = dot(worldPosition,plane);
+
 	for(int i = 0 ; i<4 ; i++)
 	{
 		toLightVector[i] = lightPosition[i] - worldPosition.xyz;
@@ -67,14 +68,12 @@ void main(void){
 		vec4 worldNormal = jointTransform * vec4(in_normal, 0.0);
 		totalNormal += worldNormal * in_weights[i];
 	}
-	//нужно добавить нормальную проекционную
-	//видовю и позицию отностистельно камеры а так же расположение сущности
-	//gl_Position = projectionViewMatrix * totalLocalPos;
+
+
 	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * totalLocalPos;
 
 
 	surfaceNormal =  (transformationMatrix * vec4(in_normal,0.0)).xyz;
-	//surfaceNormal =  totalNormal.xyz;
 
 	pass_normal = totalNormal.xyz;
 	pass_textureCoords = in_textureCoords;

@@ -20,8 +20,6 @@ public class AnimatedModelShader extends ShaderProgram {
 	private static final MyFile VERTEX_SHADER = new MyFile("C:/Users/SEM/IdeaProjects/NewTryGL/src/renderEngine/rendererAnim/animatedEntityVertex.glsl");
 	private static final MyFile FRAGMENT_SHADER = new MyFile("C:/Users/SEM/IdeaProjects/NewTryGL/src/renderEngine/rendererAnim/animatedEntityFragment.glsl");
 
-	protected UniformMatrix projectionViewMatrix = new UniformMatrix("projectionViewMatrix");
-
 
 	protected UniformMatrix transformationMatrix = new UniformMatrix("transformationMatrix");
 	protected UniformMatrix projectionMatrix = new UniformMatrix("projectionMatrix");
@@ -43,9 +41,7 @@ public class AnimatedModelShader extends ShaderProgram {
 	public AnimatedModelShader() {
 		super(VERTEX_SHADER, FRAGMENT_SHADER, "in_position", "in_textureCoords", "in_normal", "in_jointIndices",
 				"in_weights");
-		super.storeAllUniformLocations(projectionViewMatrix, diffuseMap, jointTransforms,
-				transformationMatrix, projectionMatrix, viewMatrix);//и тут****************************
-
+		super.storeAllUniformLocations( diffuseMap, jointTransforms, transformationMatrix, projectionMatrix, viewMatrix);
 
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -84,7 +80,6 @@ public class AnimatedModelShader extends ShaderProgram {
 	{
 		Matrix4f vm = Maths.createViewMatrix(camera);
 		this.viewMatrix.loadMatrix(vm);
-		//super.loadMatrix(location_viewMatrix , viewMatrix);
 	}
 
 
