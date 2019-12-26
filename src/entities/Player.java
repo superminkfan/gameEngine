@@ -7,6 +7,8 @@ import org.lwjgl.util.vector.Vector3f;
 import renderEngine.DisplayManager;
 import terrains.Terrain;
 
+import java.util.logging.SocketHandler;
+
 public class Player extends Entity {
 
     private static final float RUN_SPEED = 50;
@@ -33,6 +35,8 @@ public class Player extends Entity {
 
 
 
+
+
     }
 
     public Player(AnimatedModel model) {
@@ -40,9 +44,16 @@ public class Player extends Entity {
 
     }
 
+    public Player(AnimatedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+        super(model, position, rotX, rotY, rotZ, scale);
+
+    }
+
+
     public void move(Terrain terrain)
     {
         checkInputs();
+        //System.out.println("move rot y" +currentTurnSpeed * DisplayManager.getFrameTimeSecinds() );
         super.increaseRotation(0,currentTurnSpeed * DisplayManager.getFrameTimeSecinds(), 0);
         float distance = currentSpeed * DisplayManager.getFrameTimeSecinds();
 
@@ -66,6 +77,46 @@ public class Player extends Entity {
             upwardsSpeed = 0;
             isInAir = false;
             super.getPosition().y = terreinHeight;
+        }
+
+    }
+
+
+    public void move(Terrain terrain,AnimatedModel animatedModel)//АПРИОРИ КОСТЫЛЬНЫЙ МЕТОД!!!!!!!!!!!!!
+    {
+        checkInputs();
+        //System.out.println("move rot y" +currentTurnSpeed * DisplayManager.getFrameTimeSecinds() );
+        animatedModel.increaseRotation(0,currentTurnSpeed * DisplayManager.getFrameTimeSecinds(), 0);
+        super.increaseRotation(0,currentTurnSpeed * DisplayManager.getFrameTimeSecinds(), 0);
+
+        float distance = currentSpeed * DisplayManager.getFrameTimeSecinds();
+
+        float dx = (float) (distance * Math.sin(Math.toRadians(animatedModel.getRotY())));
+        float dz = (float) (distance * Math.cos(Math.toRadians(animatedModel.getRotY())));
+
+
+        animatedModel.increasePosition(dx,0,dz);
+        super.increasePosition(dx,0,dz);
+
+
+
+        upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSecinds();
+        animatedModel.increasePosition(0,upwardsSpeed*DisplayManager.getFrameTimeSecinds() , 0);
+        super.increasePosition(0,upwardsSpeed*DisplayManager.getFrameTimeSecinds() , 0);
+
+
+
+        float terreinHeight = terrain.getHeightOfTerrain(animatedModel.getPosition().x , animatedModel.getPosition().z);//опасно!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (animatedModel.getPosition().y < terreinHeight)
+        //здесь будет проверка на
+        // соприкосновение с землёй
+        //terrainCollisionEfeect
+        {
+            upwardsSpeed = 0;
+            isInAir = false;
+            animatedModel.getPosition().y = terreinHeight;
+            super.getPosition().y = terreinHeight;
+
         }
 
     }
@@ -96,9 +147,11 @@ public class Player extends Entity {
         if (Keyboard.isKeyDown(Keyboard.KEY_D))
         {
             this.currentTurnSpeed = -TURN_SPEED;
+
         }else if (Keyboard.isKeyDown(Keyboard.KEY_A))
         {
             this.currentTurnSpeed = TURN_SPEED;
+
 
         }else
         {

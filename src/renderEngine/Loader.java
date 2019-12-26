@@ -88,6 +88,16 @@ public class Loader {
 
     }
 
+    public int loadToVAO(float[] positions, float[] textureCoords)
+    {
+        int vaoID = createVAO();
+        storeDataInAttributeList(0, 2 , positions);
+        storeDataInAttributeList(1, 2 , textureCoords);
+        unbindVAO();
+        return vaoID;
+
+    }
+
     public RawModel loadToVAO(float[] positions, float[] textureCoords,float[] normals ,float[] tangents, int[] indices)
     {
         int vaoID = createVAO();
@@ -145,6 +155,37 @@ catch (java.lang.NullPointerException e)
         return textureID;
     }
 
+
+    public int loadFontTextureAtlas (String fileName)
+    {
+        Texture texture = null;
+        try {
+            texture = TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
+
+            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);   //мипмапинг
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D ,
+                    GL11.GL_TEXTURE_MIN_FILTER ,
+                    GL11.GL_LINEAR_MIPMAP_LINEAR);
+
+            GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS , 0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        int textureID = 0;
+        try {
+
+            textureID = texture.getTextureID();
+        }
+        catch (java.lang.NullPointerException e)
+        {
+            System.out.println(e.fillInStackTrace());
+        }
+        textures.add(textureID);
+        return textureID;
+    }
 
 
     public void cleanUp()

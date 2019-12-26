@@ -6,6 +6,9 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
+import fontRendering.TextMaster;
 import gui.GuiRenderer;
 import gui.GuiTexture;
 import loaders.AnimatedModelLoader;
@@ -14,9 +17,11 @@ import models.TexturedModel;
 import normalMappingObjConverter.NormalMappedObjLoader;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 import renderEngine.*;
@@ -33,9 +38,8 @@ import water.WaterRenderer;
 import water.WaterShader;
 import water.WaterTile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.io.File;
+import java.util.*;
 
 public class MainGameLoop {
 
@@ -80,8 +84,7 @@ public class MainGameLoop {
         TexturedModel watTexture = new TexturedModel(watModel,new ModelTexture(loader.loadTexture("white")));
 
 
-        Player player = new Player(watTexture,
-                new Vector3f(400,0,-400),0,0,0,13);
+      //  Player player1 = new Player(watTexture, new Vector3f(400,0,-400),0,0,0,13);
 
 
         AnimatedModel entity = AnimatedModelLoader.
@@ -93,19 +96,19 @@ public class MainGameLoop {
         //ВОТ ТУТ  НУЖНО ПОДУМАТЬ КАК ОСТАНАВЛИВАТЬ АНИМАЦИЮ
 
         AnimatedModel animatedModel = new AnimatedModel(entity,new Vector3f(400,0,-400) ,
-                0f,0f,0f,10f);
+                0f,0f,0f,2f);
 
 
 
-        Player player1 = new Player(animatedModel);
+        Player player = new Player(animatedModel);
 
         Camera camera = new Camera(player);
 
         animEntities.add(animatedModel);
-        animEntities.add(animatedModel);
+        //animEntities.add(animatedModel);
 
-        entities.add(player);
-        entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
+      // entities.add(player);
+       //entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
 //========================================================================================
 
         //===============================TESTS===============================
@@ -259,7 +262,7 @@ public class MainGameLoop {
 
 //-------------------------------TOWER---------------------------------
 
-        ModelData towerData = OBJFileLoader.loadOBJ("woodTower3");
+        ModelData towerData = OBJFileLoader.loadOBJ("watHouse9");
 
 
         RawModel towerModel = loader.loadToVAO(
@@ -269,7 +272,7 @@ public class MainGameLoop {
                 towerData.getIndices()
         );
 
-        TexturedModel towerTexture = new TexturedModel(towerModel,new ModelTexture(loader.loadTexture("woodTowerTex1")));
+        TexturedModel towerTexture = new TexturedModel(towerModel,new ModelTexture(loader.loadTexture("white")));
         towerTexture.getTexture().setHasTransparancey(true);
 
 
@@ -334,16 +337,22 @@ public class MainGameLoop {
 
  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        entities.add(new Entity(lampTexture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) , 0,0,0,1));
-        entities.add(new Entity(lampTexture , new Vector3f(370 , terrain.getHeightOfTerrain(370,-300) , -300) , 0,0,0,1));
-        entities.add(new Entity(lampTexture , new Vector3f(293 ,terrain.getHeightOfTerrain(293,-305)  , -305) , 0,0,0,1));
-        entities.add(new Entity(lampTexture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) , 0,0,0,1));
+        entities.add(new Entity(lampTexture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) ,
+                0,0,0,4));
+        entities.add(new Entity(lampTexture , new Vector3f(370 , terrain.getHeightOfTerrain(370,-300) , -300) ,
+                0,0,0,3));
+        entities.add(new Entity(lampTexture , new Vector3f(293 ,terrain.getHeightOfTerrain(293,-305)  , -305) ,
+                0,0,0,4));
+        entities.add(new Entity(lampTexture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) ,
+                0,0,0,4));
 
-        Entity tower = new Entity(towerTexture , new Vector3f(403 , terrain.getHeightOfTerrain(403,-245) - 7 , -245) , 0,0,0,9);
+        Entity tower = new Entity(towerTexture , new Vector3f(403 , terrain.getHeightOfTerrain(403,-245) - 7 , -245) ,
+                0,0,0,13);
         entities.add(tower);
         entities.add(tower);
 
-        entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250)  , -250) , 0,0,0,0.8f));
+        entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250)  , -250) ,
+                0,0,0,2f));
         entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250) , -250) , 0,0,0,0.8f));
 
         Entity spider = new Entity(spiderTexture ,
@@ -370,15 +379,15 @@ public class MainGameLoop {
         }*/
 
 
-        for(int i=0 ; i <100 ; i++)
+        for(int i=0 ; i <150 ; i++)
         {
-            float x = random.nextFloat()*500;
-            float z = random.nextFloat()* -500 ;
+            float x = random.nextFloat()*1000;
+            float z = random.nextFloat()* -1000 ;
             float y = terrain.getHeightOfTerrain(x,z);
 
             entities.add(new Entity(fernTexture,random.nextInt(4) ,
                     new Vector3f(x,y,z),
-                    0,random.nextFloat() *500,0,random.nextFloat()*1.5f));
+                    0,random.nextFloat() *500,0,random.nextFloat()*3f));
 
 
             /* x = random.nextFloat()*800;
@@ -390,21 +399,21 @@ public class MainGameLoop {
 
 
 
-            x = random.nextFloat()*800;
-            z = random.nextFloat()* -800;
+            x = random.nextFloat()*1000;
+            z = random.nextFloat()* -1000;
             y = terrain.getHeightOfTerrain(x,z);
 
             entities.add(new Entity(grassTexture,
                     new Vector3f(x, y,z)
-                    ,0,random.nextFloat() *500,0,1));
+                    ,0,random.nextFloat() *500,0,2));
 
-            x = random.nextFloat()*800;
-            z = random.nextFloat()* -800;
+            x = random.nextFloat()*1000;
+            z = random.nextFloat()* -1000;
             y = terrain.getHeightOfTerrain(x,z);
 
             entities.add(new Entity(flowerTexture,
                     new Vector3f(x, y,z)
-                    ,0,random.nextFloat() *500,0,1));
+                    ,0,random.nextFloat() *500,0,3));
            /* x = random.nextFloat()*800 -400;
             z = random.nextFloat()* -600;
             y = terrain.getHeightOfTerrain(x,z);
@@ -413,13 +422,13 @@ public class MainGameLoop {
                     new Vector3f(x,y,z)
                     ,0,random.nextFloat() *500,0,random.nextFloat()*2));*/
 
-            x = random.nextFloat()*800;
-            z = random.nextFloat()* -800;
+            x = random.nextFloat()*1000;
+            z = random.nextFloat()* -1000;
             y = terrain.getHeightOfTerrain(x,z);
 
             entities.add(new Entity(pineTexture,
                     new Vector3f(x, y,z),
-                    0,random.nextFloat() *500,0,random.nextFloat()*2));
+                    0,random.nextFloat() *500,0,random.nextFloat()*4));
 
         }
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -444,7 +453,7 @@ public class MainGameLoop {
         WaterFrameBuffers fbos = new WaterFrameBuffers();
         WaterShader waterShader = new WaterShader();
         WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader , renderer.getProjectionMatrix() , fbos);
-        WaterTile water = new WaterTile(100,-100,-3);
+        WaterTile water = new WaterTile(800,-800,-3);
         waters.add(water);
 
 /*        GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture() , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
@@ -468,8 +477,8 @@ public class MainGameLoop {
 
         Entity barrel = new Entity(barrelModel , new Vector3f(400,terrain.getHeightOfTerrain(400,-400)+35,-400) ,
                 0f,0f,0f,5f);
-        //normalMapEntities.add(barrel);
-        //normalMapEntities.add(barrel);
+        normalMapEntities.add(barrel);
+        normalMapEntities.add(barrel);
 //=====================================================
         TexturedModel towerNorModel  = new TexturedModel(NormalMappedObjLoader.loadOBJ("woodTower3" , loader),
                 new ModelTexture(loader.loadTexture("woodTowerTex1")));
@@ -477,11 +486,24 @@ public class MainGameLoop {
         towerNorModel.getTexture().setReflectivity(0.5f);
 
         towerNorModel.getTexture().setNormalMap(loader.loadTexture("woodTowerTex2"));
-        Entity towerNormal = new Entity(towerNorModel , new Vector3f(453,terrain.getHeightOfTerrain(453,-245),-245)  , 0,0,0,9f);
+        Entity towerNormal = new Entity(towerNorModel , new Vector3f(453,terrain.getHeightOfTerrain(453,-245)-5,-245)  ,
+                0,0,0,15f);
         normalMapEntities.add(towerNormal);
         normalMapEntities.add(towerNormal);
 
-//=====================================================
+
+
+//-*-*-*-**-*-*-*-*-*--*-*-*--*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*--*-*
+        //TEXT RENDERING//*****************************************
+
+        TextMaster.init(loader);
+
+        FontType font = new FontType(loader.loadFontTextureAtlas("arial") , new File("res/arial.fnt"));
+        GUIText text = new GUIText("this is a test text" , 10 , font , new Vector2f(0.5f,0.5f) , 0.5f , true);
+
+
+
+//-*-*-*-**-*-*-*-*-*--*-*-*--*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*--*-*
 
 
 
@@ -495,25 +517,9 @@ public class MainGameLoop {
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-        //тут самое интересное
-        //расположение
-        //попробывать чтоб это был Player
 
-
-      /*  AnimatedModel entity = AnimatedModelLoader.
-                loadEntity(new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.MODEL_FILE),
-                new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.DIFFUSE_FILE));
-        Animation animation = AnimationLoader.
-                loadAnimation(new MyFile(GeneralSettings.RES_FOLDER, GeneralSettings.ANIM_FILE));
-        entity.doAnimation(animation);
-        //ВОТ ТУТ  НУЖНО ПОДУМАТЬ КАК ОСТАНАВЛИВАТЬ АНИМАЦИЮ
-
-        AnimatedModel animatedModel = new AnimatedModel(entity,new Vector3f(400,10,-400) ,
-                0f,0f,0f,10f);
-        animEntities.add(animatedModel);
-*/
-        AnimatedModel animatedModel1= new AnimatedModel(entity,new Vector3f(390,7,-400) ,
-                0f,0f,0f,10f);
+        AnimatedModel animatedModel1= new AnimatedModel(entity,new Vector3f(300,terrain.getHeightOfTerrain(300 , -400) + 2,-400) ,
+                0f,0f,0f,2f);
         animEntities.add(animatedModel1);
 
 
@@ -522,7 +528,9 @@ public class MainGameLoop {
 
 
         while(!Display.isCloseRequested()){
-            player.move(terrain);
+
+
+            player.move(terrain ,animatedModel);//если не анимированная модель то без плеера
             camera.move();
             picker.update();
 
@@ -530,20 +538,30 @@ public class MainGameLoop {
 
 
             spider.increaseRotation(0.2f , 0.0f , 0.2f);
-          // barrel.increaseRotation(0.01f , 0.09f , 0.1f);
-            towerNormal.increaseRotation(0.0f , 0.02f , 0.0f);
-            tower.increaseRotation(0.0f , 0.02f , 0.0f);
-            animatedModel1.increaseRotation(0.0f , 0.2f , 0.0f);
+
+            entity.update();
+            if (Keyboard.isKeyDown(Keyboard.KEY_Q))
+            {
+                entity.test(animation);
+            }
+            /*
+            Вот тут нужно придумать оооочень интересную хрень
+            Вообщем нужно чтоб когда позиция не менялась то есть игрок останавливаля то
+            анимация ПЛАВНО переходила в начальную позицию - руки вниз и ноги вместе
+            Но как
+             */
+
 
 //------------------------------------------------
             //ОТРАЖЕННЫЙ
+
             fbos.bindReflectionFrameBuffer();
             float distance = 2 * (camera.getPosition().y - water.getHeight());
             camera.getPosition().y -= distance;
             camera.invertPitch();
 
 
-            entity.update();
+
             renderer.renderScene(entities ,normalMapEntities, animEntities ,terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()));
 
 
@@ -568,6 +586,7 @@ public class MainGameLoop {
 
             waterRenderer.render(waters , camera);
             guiRenderer.render(guis);
+            TextMaster.render();
 
 
 
@@ -589,6 +608,7 @@ public class MainGameLoop {
         guiRenderer.cleanUp();
         waterShader.cleanUp();
         renderer.cleanUp();
+        TextMaster.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
     }

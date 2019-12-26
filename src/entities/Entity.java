@@ -23,6 +23,14 @@ public class Entity {
         this.rotZ = rotZ;
         this.scale = scale;
     }
+    public Entity(AnimatedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+        this.animatedModel = model;
+        this.position = position;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
+        this.scale = scale;
+    }
 
     public Entity(AnimatedModel model) {
         this.animatedModel = model;

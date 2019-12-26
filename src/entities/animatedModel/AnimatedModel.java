@@ -68,6 +68,26 @@ public class AnimatedModel {
 		this.scale = scale;
 	}
 
+	public void setPosition(Vector3f position) {
+		this.position = position;
+	}
+
+	public void setRotX(float rotX) {
+		this.rotX = rotX;
+	}
+
+	public void setRotY(float rotY) {
+		this.rotY = rotY;
+	}
+
+	public void setRotZ(float rotZ) {
+		this.rotZ = rotZ;
+	}
+
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+
 	public  void increasePosition(float dx, float dy , float dz)
 	{
 		this.position.x += dx;
@@ -137,6 +157,11 @@ public class AnimatedModel {
 
 	public void update() {//вот тут сделай чтоб обрабатывался список
 		animator.update();
+	}
+
+	public void test(Animation animation)
+	{
+		doAnimation(animation);
 	}
 
 

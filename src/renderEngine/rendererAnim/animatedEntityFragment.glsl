@@ -3,7 +3,6 @@
 const vec2 lightBias = vec2(0.7, 0.6);//just indicates the balance between diffuse and ambient lighting
 
 in vec2 pass_textureCoords;
-in vec3 pass_normal;
 
 in vec3 surfaceNormal;
 in vec3 toLightVector[4];
