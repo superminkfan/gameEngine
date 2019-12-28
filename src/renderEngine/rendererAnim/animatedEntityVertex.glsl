@@ -11,7 +11,7 @@ in vec3 in_weights;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector[4];//четыре потому что если будет блдьше то не потянет
+out vec3 toLightVector[5];//четыре потому что если будет блдьше то не потянет
 //4 источника света могут влиять на основной цвет
 out vec3 toCameraVector;
 out float visibility;
@@ -23,7 +23,7 @@ uniform mat4 jointTransforms[MAX_JOINTS];
 
 
 
-uniform vec3 lightPosition[4];//new
+uniform vec3 lightPosition[5];//new
 uniform vec4 plane ;
 
 const float density = 0;
@@ -50,7 +50,7 @@ void main(void){
 
 	gl_ClipDistance[0] = dot(worldPosition,plane);
 
-	for(int i = 0 ; i<4 ; i++)
+	for(int i = 0 ; i<5 ; i++)
 	{
 		toLightVector[i] = lightPosition[i] - worldPosition.xyz;
 	}

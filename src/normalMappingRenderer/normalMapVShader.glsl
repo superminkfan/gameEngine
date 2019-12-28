@@ -7,7 +7,7 @@ in vec3 tangent;
 
 out vec2 pass_textureCoordinates;
 
-out vec3 toLightVector[4];
+out vec3 toLightVector[5];
 out vec3 toCameraVector;
 out float visibility;
 out vec3 pass_tangent;
@@ -22,7 +22,7 @@ out vec3 fragPos;
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPositionEyeSpace[4];
+uniform vec3 lightPositionEyeSpace[5];
 
 uniform float numberOfRows;
 uniform vec2 offset;
@@ -57,7 +57,7 @@ void main(void){
     tang.z , bitang.z , norm.z
     );
 
-    for(int i=0;i<4;i++){
+    for(int i=0;i<5;i++){
         toLightVector[i] = toTangentSpace * (lightPositionEyeSpace[i] - positionRelativeToCam.xyz);
     }
 

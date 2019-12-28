@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Loads the mesh data for a model from a collada XML file.
- * @author Karl
+ *
  *
  */
 public class GeometryLoader {

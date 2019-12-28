@@ -6,7 +6,7 @@ in vec3 normal;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector[4];//четыре потому что если будет блдьше то не потянет
+out vec3 toLightVector[5];//четыре потому что если будет блдьше то не потянет
 //4 источника света могут влиять на основной цвет
 out vec3 toCameraVector;
 out float visibility;
@@ -15,7 +15,7 @@ out float visibility;
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition[4];
+uniform vec3 lightPosition[5];
 
 uniform float useFakeLighting;//очень качественный костыль
 
@@ -53,7 +53,7 @@ void main (void)
 
     surfaceNormal =  (transformationMatrix * vec4(normal,0.0)).xyz;
 
-    for(int i = 0 ; i<4 ; i++)
+    for(int i = 0 ; i<5 ; i++)
     {
         toLightVector[i] = lightPosition[i] - worldPosition.xyz;
     }

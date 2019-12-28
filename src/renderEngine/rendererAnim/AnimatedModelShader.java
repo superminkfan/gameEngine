@@ -12,7 +12,7 @@ import utils.MyFile;
 import java.util.List;
 
 public class AnimatedModelShader extends ShaderProgram {
-	private static final int MAX_LIGHTS = 4;
+	private static final int MAX_LIGHTS = 5;
 
 	private static final int MAX_JOINTS = 50;// max number of joints in a skeleton
 	private static final int DIFFUSE_TEX_UNIT = 0;

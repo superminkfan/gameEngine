@@ -135,9 +135,10 @@ public class MainGameLoop {
 
 //====================================TERRAINS========================================
 
-        TerrainTexture backgraondTexture = new TerrainTexture(loader.loadTexture("grassy2"));
+       // TerrainTexture backgraondTexture = new TerrainTexture(loader.loadTexture("grassy2"));
+        TerrainTexture backgraondTexture = new TerrainTexture(loader.loadTexture("sand2"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("sand1"));
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path1"));
 
 
@@ -203,7 +204,7 @@ public class MainGameLoop {
 
 //-------------------------------BOX----------------------------------
 
-        ModelData boxData = OBJFileLoader.loadOBJ("box");
+        ModelData boxData = OBJFileLoader.loadOBJ("wall2");
 
         RawModel boxModel = loader.loadToVAO(
                 boxData.getVertices(),
@@ -262,7 +263,7 @@ public class MainGameLoop {
 
 //-------------------------------TOWER---------------------------------
 
-        ModelData towerData = OBJFileLoader.loadOBJ("watHouse9");
+        ModelData towerData = OBJFileLoader.loadOBJ("woodTower3");
 
 
         RawModel towerModel = loader.loadToVAO(
@@ -272,7 +273,7 @@ public class MainGameLoop {
                 towerData.getIndices()
         );
 
-        TexturedModel towerTexture = new TexturedModel(towerModel,new ModelTexture(loader.loadTexture("white")));
+        TexturedModel towerTexture = new TexturedModel(towerModel,new ModelTexture(loader.loadTexture("woodTowerTex1")));
         towerTexture.getTexture().setHasTransparancey(true);
 
 
@@ -309,17 +310,17 @@ public class MainGameLoop {
 
         //-------------------------------ROCK---------------------------------
 
-        ModelData rockData = OBJFileLoader.loadOBJ("Rock2");
+        ModelData watHouseData = OBJFileLoader.loadOBJ("watHouse10");
 
 
-        RawModel rockModel = loader.loadToVAO(
-                rockData.getVertices(),
-                rockData.getTextureCoords() ,
-                rockData.getNormals(),
-                rockData.getIndices()
+        RawModel watHouseModel = loader.loadToVAO(
+                watHouseData.getVertices(),
+                watHouseData.getTextureCoords() ,
+                watHouseData.getNormals(),
+                watHouseData.getIndices()
         );
 
-        TexturedModel rockTexture = new TexturedModel(rockModel,new ModelTexture(loader.loadTexture("rock_Tex")));
+        TexturedModel rockTexture = new TexturedModel(watHouseModel,new ModelTexture(loader.loadTexture("watHouseTex")));
 //---------------------------------------------------------
 
 
@@ -330,7 +331,7 @@ public class MainGameLoop {
         lights.add(new Light(new Vector3f(5000,7000,-4000),new Vector3f(1f,1f,1f)));//это типо солнце
         lights.add(new Light(new Vector3f(185,10,-293) , new Vector3f(4,0,0) , new Vector3f(1,0.01f,0.002f)));//а вот это фонари
         lights.add(new Light(new Vector3f(370,terrain.getHeightOfTerrain(370,-300) + 8,-300) , new Vector3f(0,4,4), new Vector3f(1,0.01f,0.002f)));
-       // lights.add(new Light(new Vector3f(293,11,-305) , new Vector3f(0,0,10), new Vector3f(1,0.01f,0.002f)));
+        lights.add(new Light(new Vector3f(293,11,-305) , new Vector3f(0,0,10), new Vector3f(1,0.01f,0.002f)));
 
 //+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=++=+=+=+=+=+=+=+=+=+=++==++=+=+=+=+=+=+=+=+
 
@@ -352,8 +353,9 @@ public class MainGameLoop {
         entities.add(tower);
 
         entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250)  , -250) ,
-                0,0,0,2f));
-        entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250) , -250) , 0,0,0,0.8f));
+                0,0,0,0.8F));
+                entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250) , -250) ,
+                        0,0,0,0.8f));
 
         Entity spider = new Entity(spiderTexture ,
                 new Vector3f(300 , terrain.getHeightOfTerrain(300,-250) + 120 , -250) ,
@@ -362,7 +364,11 @@ public class MainGameLoop {
         entities.add(spider);
 
 
-
+        Entity watHouse = new Entity( rockTexture,
+                new Vector3f(350 , terrain.getHeightOfTerrain(350,-390) -26 , -390) ,
+                0,0,0,17);
+        entities.add(watHouse);
+        entities.add(watHouse);
 
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -379,7 +385,7 @@ public class MainGameLoop {
         }*/
 
 
-        for(int i=0 ; i <150 ; i++)
+        for(int i=0 ; i <80 ; i++)
         {
             float x = random.nextFloat()*1000;
             float z = random.nextFloat()* -1000 ;
@@ -390,12 +396,12 @@ public class MainGameLoop {
                     0,random.nextFloat() *500,0,random.nextFloat()*3f));
 
 
-            /* x = random.nextFloat()*800;
+             x = random.nextFloat()*800;
              z = random.nextFloat()* -800 ;
              y = terrain.getHeightOfTerrain(x,z)-1;
-            entities.add(new Entity(rockTexture,
+            entities.add(new Entity(boxTexture,
                     new Vector3f(x, y,z),
-                    random.nextFloat() *500,random.nextFloat() *500,random.nextFloat() *500,random.nextFloat()*10));*/
+                    random.nextFloat() *500,random.nextFloat() *500,random.nextFloat() *500,random.nextFloat()*10));
 
 
 
@@ -440,9 +446,9 @@ public class MainGameLoop {
         //играемся с мышью
         MousePicker picker = new MousePicker(camera,renderer.getProjectionMatrix() , terrain);
 
-        //Entity lampEnt = (new Entity(lampTexture , new Vector3f(293,-6.8f , -305) , 0 , 0, 0, 1));
-       // entities.add(lampEnt);
-        Light lightLamp = (new Light( new Vector3f(293,-6.8f , -305) , new Vector3f(1,2,2) , new Vector3f(1f , 0.00001f, 0.002f)));
+        Entity lampEnt = (new Entity(lampTexture , new Vector3f(293,-6.8f , -305) , 0 , 0, 0, 1));
+       entities.add(lampEnt);
+        Light lightLamp = (new Light( new Vector3f(293,-6.8f , -305) , new Vector3f(1,2,2) , new Vector3f(0.01f , 0.01f, 0.01f)));
         lights.add(lightLamp);
 
 
@@ -491,6 +497,18 @@ public class MainGameLoop {
         normalMapEntities.add(towerNormal);
         normalMapEntities.add(towerNormal);
 
+//=========================
+        TexturedModel wall  = new TexturedModel(NormalMappedObjLoader.loadOBJ("wall4" , loader),
+                new ModelTexture(loader.loadTexture("walTex")));
+        wall.getTexture().setShineDamper(10);
+        wall.getTexture().setReflectivity(0.1f);
+
+        wall.getTexture().setNormalMap(loader.loadTexture("wallNormal1"));
+        Entity wallNormal = new Entity(wall , new Vector3f(300,terrain.getHeightOfTerrain(300,-500)-3,-500)  ,
+                0,50,0,15f);
+        normalMapEntities.add(wallNormal);
+        normalMapEntities.add(wallNormal);
+
 
 
 //-*-*-*-**-*-*-*-*-*--*-*-*--*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*--*-*
@@ -537,7 +555,6 @@ public class MainGameLoop {
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 
 
-            spider.increaseRotation(0.2f , 0.0f , 0.2f);
 
             entity.update();
             if (Keyboard.isKeyDown(Keyboard.KEY_Q))
@@ -594,7 +611,7 @@ public class MainGameLoop {
             Vector3f terrainPoint = picker.getCurrentTerrainPoint();
             if(terrainPoint!=null)
             {
-                //lampEnt.setPosition(terrainPoint);
+                lampEnt.setPosition(terrainPoint);
                 lightLamp.setPosition(new Vector3f(terrainPoint.x , terrainPoint.y +5 , terrainPoint.z));
             }
 
