@@ -1,23 +1,31 @@
 package entities;
-import org.lwjgl.input.Keyboard;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import renderEngine.DisplayManager;
+import utils.SmoothFloat;
 
 public class Camera  implements ICamera{
 
     private static final float FOV = 70;
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PLANE = 7000f;
+    private static final float MAX_PITCH = 90;
 
 
-    private float distanceFromPlayer = 0;
-    private float angleAroundPlayer = 0;
+
+    //private float distanceFromPlayer = 0;
+    private SmoothFloat distanceFromPlayer = new SmoothFloat(0, 10);
+    // private float angleAroundPlayer = 0;
+    private SmoothFloat angleAroundPlayer = new SmoothFloat(0, 10);
+
 
 
     private Vector3f position = new Vector3f(100,40,-20);
-    private float pitch = 0;
+   // private float pitch = 0;
+    private SmoothFloat pitch = new SmoothFloat(0 , 10);
     private float yaw;
     private float roll;
 
@@ -85,7 +93,7 @@ public class Camera  implements ICamera{
         float verticalDistance = calculateVerticalDistance();
         calculateCameraPosition(horizontalDistance , verticalDistance);
 
-        this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
+        this.yaw = 180 - (player.getRotY() + angleAroundPlayer.get());
         //настраеваем движение типо камеры
 
 
@@ -97,7 +105,7 @@ public class Camera  implements ICamera{
 
     private  void calculateCameraPosition(float horizDistance , float verticalDistance)
     {
-        float theta = player.getRotY() + angleAroundPlayer;
+        float theta = player.getRotY() + angleAroundPlayer.get();
         float offsetX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
 
@@ -111,12 +119,12 @@ public class Camera  implements ICamera{
 
     private float calculateHorizontalDistance()
     {
-        return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
+        return (float) (distanceFromPlayer.get() * Math.cos(Math.toRadians(pitch.get())));
     }
 
     private float calculateVerticalDistance()
     {
-        return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
+        return (float) (distanceFromPlayer.get() * Math.sin(Math.toRadians(pitch.get())));
     }
 
 
@@ -124,18 +132,31 @@ public class Camera  implements ICamera{
     private void calculateZoom()
     {
         float zoomLevel = Mouse.getDWheel() * 0.1f;
-        distanceFromPlayer -= zoomLevel;
+        distanceFromPlayer.increaseTarget(-zoomLevel);
+        distanceFromPlayer.update(DisplayManager.getFrameTimeSecinds());
     }
 
     private void calculatePitch()
     {
         if (Mouse.isButtonDown(1))
         {
-            float pitchChane = Mouse.getDY() * 0.1f;
-            pitch -= pitchChane;
+            float pitchChane = Mouse.getDY() * 0.4f;
+            //pitch = pitch - pitchChane;
+            //pitch = new SmoothFloat(pitch.get() - pitchChane , 10);
+            pitch.increaseTarget(-pitchChane);
+            clampPitch();
+
+        }
+        pitch.update(DisplayManager.getFrameTimeSecinds());
+
+    }
+    private void clampPitch() {
+        if (pitch.getTarget() < 0) {
+            pitch.setTarget(0);
+        } else if (pitch.getTarget() > MAX_PITCH) {
+            pitch.setTarget(MAX_PITCH);
         }
     }
-
 
 
 
@@ -145,14 +166,17 @@ public class Camera  implements ICamera{
         {
             float angleChange = Mouse.getDX() * 0.3f;
 
-            angleAroundPlayer -= angleChange;
+            angleAroundPlayer.increaseTarget(-angleChange);
         }
+        angleAroundPlayer.update(DisplayManager.getFrameTimeSecinds());
     }
 
 
     public void invertPitch()
     {
-        this.pitch = -pitch;
+
+        //this.pitch = -pitch;
+        this.pitch = new SmoothFloat(-pitch.get() , 10);
     }
 
 
@@ -162,7 +186,7 @@ public class Camera  implements ICamera{
     }
 
     public float getPitch() {
-        return pitch;
+        return pitch.get();
     }
 
     public float getYaw() {

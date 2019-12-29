@@ -1,15 +1,14 @@
 package normalMappingRenderer;
 
-import java.util.List;
-
+import entities.Light;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
-
-import entities.Light;
 import shaders.ShaderProgram;
+
+import java.util.List;
 
 public class NormalMappingShader extends ShaderProgram{
 

@@ -7,8 +7,6 @@ import org.lwjgl.util.vector.Vector3f;
 import renderEngine.DisplayManager;
 import terrains.Terrain;
 
-import java.util.logging.SocketHandler;
-
 public class Player extends Entity {
 
     private static final float RUN_SPEED = 50;

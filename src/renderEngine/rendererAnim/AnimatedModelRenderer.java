@@ -1,13 +1,8 @@
 package renderEngine.rendererAnim;
 
 import entities.animatedModel.AnimatedModel;
-import entities.Camera;
-import entities.Light;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
-import renderEngine.MasterRenderer;
 import toolBox.Maths;
 import utils.OpenGlUtils;
 

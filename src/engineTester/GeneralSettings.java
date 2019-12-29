@@ -1,6 +1,5 @@
 package engineTester;
 
-import org.lwjgl.util.vector.Vector3f;
 import utils.MyFile;
 
 

@@ -1,11 +1,11 @@
 package engineTester;
 
-import entities.animatedModel.AnimatedModel;
 import animation.Animation;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import entities.animatedModel.AnimatedModel;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
 import fontRendering.TextMaster;
@@ -13,6 +13,7 @@ import gui.GuiRenderer;
 import gui.GuiTexture;
 import loaders.AnimatedModelLoader;
 import loaders.AnimationLoader;
+import models.RawModel;
 import models.TexturedModel;
 import normalMappingObjConverter.NormalMappedObjLoader;
 import objConverter.ModelData;
@@ -24,9 +25,10 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
-import renderEngine.*;
-import models.RawModel;
-import renderEngine.rendererAnim.AnimatedModelRenderer;
+import renderEngine.DisplayManager;
+import renderEngine.Loader;
+import renderEngine.MasterRenderer;
+import renderEngine.OBJLoader;
 import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
@@ -39,7 +41,9 @@ import water.WaterShader;
 import water.WaterTile;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MainGameLoop {
 
@@ -559,6 +563,7 @@ public class MainGameLoop {
              */
 
 
+
 //------------------------------------------------
             //ОТРАЖЕННЫЙ
 
@@ -569,7 +574,8 @@ public class MainGameLoop {
 
 
 
-            renderer.renderScene(entities ,normalMapEntities, animEntities ,terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()+1f));
+            renderer.renderScene(entities ,normalMapEntities, animEntities ,terrains , lights , camera , new Vector4f(0,1,0,
+                    -water.getHeight()+1f));
 
 
             camera.getPosition().y += distance;

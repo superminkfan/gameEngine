@@ -5,7 +5,10 @@ import entities.Light;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
-import shaders.*;
+import shaders.ShaderProgram;
+import shaders.UniformMat4Array;
+import shaders.UniformMatrix;
+import shaders.UniformSampler;
 import toolBox.Maths;
 import utils.MyFile;
 

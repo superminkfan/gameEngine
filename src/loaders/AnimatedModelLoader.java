@@ -1,13 +1,13 @@
 package loaders;
 
-import entities.animatedModel.AnimatedModel;
-import entities.animatedModel.Joint;
 import colladaLoader.ColladaLoader;
 import dataStructures.AnimatedModelData;
 import dataStructures.JointData;
 import dataStructures.MeshData;
 import dataStructures.SkeletonData;
 import engineTester.GeneralSettings;
+import entities.animatedModel.AnimatedModel;
+import entities.animatedModel.Joint;
 import openglObjects.Vao;
 import textures.Texture;
 import utils.MyFile;
