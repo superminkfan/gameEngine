@@ -493,7 +493,7 @@ public class MainGameLoop {
         wall.getTexture().setShineDamper(10);
         wall.getTexture().setReflectivity(0.1f);
 
-        wall.getTexture().setNormalMap(loader.loadTexture("wallNormal1"));
+        wall.getTexture().setNormalMap(loader.loadTexture("wallNormal"));
         Entity wallNormal = new Entity(wall , new Vector3f(300,terrain.getHeightOfTerrain(300,-500)-3,-500)  ,
                 0,50,0,15f);
         normalMapEntities.add(wallNormal);
@@ -569,7 +569,7 @@ public class MainGameLoop {
 
 
 
-            renderer.renderScene(entities ,normalMapEntities, animEntities ,terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()));
+            renderer.renderScene(entities ,normalMapEntities, animEntities ,terrains , lights , camera , new Vector4f(0,1,0, -water.getHeight()+1f));
 
 
             camera.getPosition().y += distance;

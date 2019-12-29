@@ -16,7 +16,7 @@ out vec2 textureCoords;
 out vec3 toCameraVector;
 out vec3 fromLightVector;
 
-const float tiling = 7.0;
+const float tiling = 4.0;
 
 
 void main(void) {
