@@ -233,18 +233,7 @@ public class MainGameLoop {
         pineTexture.getTexture().setHasTransparancey(true);
 
 
-//---------------------------HOUSE---------------------------------
 
-        ModelData houseData = OBJFileLoader.loadOBJ("dom");
-
-        RawModel houseModel = loader.loadToVAO(
-                houseData.getVertices(),
-                houseData.getTextureCoords() ,
-                houseData.getNormals(),
-                houseData.getIndices()
-        );
-
-        TexturedModel houseTexture = new TexturedModel(houseModel,new ModelTexture(loader.loadTexture("water")));
 
 //-----------------------------------LAMP-----------------------------------------------
 
@@ -308,7 +297,7 @@ public class MainGameLoop {
 
 
 
-        //-------------------------------ROCK---------------------------------
+        //-------------------------------House---------------------------------
 
         ModelData watHouseData = OBJFileLoader.loadOBJ("watHouse10");
 
@@ -320,7 +309,7 @@ public class MainGameLoop {
                 watHouseData.getIndices()
         );
 
-        TexturedModel rockTexture = new TexturedModel(watHouseModel,new ModelTexture(loader.loadTexture("watHouseTex")));
+        TexturedModel watHouseTe = new TexturedModel(watHouseModel,new ModelTexture(loader.loadTexture("watHouseTex")));
 //---------------------------------------------------------
 
 
@@ -328,7 +317,8 @@ public class MainGameLoop {
 
 //+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=++=+=LIGHTS==+=+=+=+=++==++=+=+=+=+=+=+=+=+
         //lights.add(new Light(new Vector3f(0,1200,-3000),new Vector3f(1f,1f,1f)));//это типо солнце
-        lights.add(new Light(new Vector3f(5000,7000,-4000),new Vector3f(1f,1f,1f)));//это типо солнце
+        Light sun = new Light(new Vector3f(5000,7000,-4000),new Vector3f(1f,1f,1f));//это типо солнце
+        lights.add(sun);
         lights.add(new Light(new Vector3f(185,10,-293) , new Vector3f(4,0,0) , new Vector3f(1,0.01f,0.002f)));//а вот это фонари
         lights.add(new Light(new Vector3f(370,terrain.getHeightOfTerrain(370,-300) + 8,-300) , new Vector3f(0,4,4), new Vector3f(1,0.01f,0.002f)));
         lights.add(new Light(new Vector3f(293,11,-305) , new Vector3f(0,0,10), new Vector3f(1,0.01f,0.002f)));
@@ -364,7 +354,7 @@ public class MainGameLoop {
         entities.add(spider);
 
 
-        Entity watHouse = new Entity( rockTexture,
+        Entity watHouse = new Entity( watHouseTe,
                 new Vector3f(350 , terrain.getHeightOfTerrain(350,-390) -26 , -390) ,
                 0,0,0,17);
         entities.add(watHouse);
@@ -601,7 +591,7 @@ public class MainGameLoop {
 
 
 
-            waterRenderer.render(waters , camera);
+            waterRenderer.render(waters , camera , sun);
             guiRenderer.render(guis);
             TextMaster.render();
 

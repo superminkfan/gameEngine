@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import shaders.ShaderProgram;
 import toolBox.Maths;
 import entities.Camera;
+import entities.Light;
 
 public class WaterShader extends ShaderProgram {
 
@@ -16,8 +17,11 @@ public class WaterShader extends ShaderProgram {
     private int location_reflectionTexture;
     private int location_refractionTexture;
     private int location_dudvMap;
+    private int location_normalMap;
     private int location_moveFactor;
     private int location_cameraPosition;
+    private int location_lightColour;
+    private int location_lightPosition;
 
     public WaterShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -36,8 +40,11 @@ public class WaterShader extends ShaderProgram {
         location_reflectionTexture = getUniformLocation("reflectionTexture");
         location_refractionTexture = getUniformLocation("refractionTexture");
         location_dudvMap = getUniformLocation("dudvMap");
+        location_normalMap = getUniformLocation("normalMap");
         location_moveFactor = getUniformLocation("moveFactor");
         location_cameraPosition = getUniformLocation("cameraPosition");
+        location_lightColour = getUniformLocation("lightColour");
+        location_lightPosition = getUniformLocation("lightPosition");
     }
 
     public void connectTextureUnits()
@@ -45,6 +52,13 @@ public class WaterShader extends ShaderProgram {
         super.loadInt(location_reflectionTexture , 0);
         super.loadInt(location_refractionTexture , 1);
         super.loadInt(location_dudvMap , 2);
+        super.loadInt(location_normalMap , 3);
+    }
+
+    public void loadLight(Light sun)
+    {
+        super.loadVector(location_lightColour , sun.getColour());
+        super.loadVector(location_lightPosition , sun.getPosition());
     }
 
     public void loadMoveFactor(float factor)

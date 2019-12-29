@@ -9,8 +9,8 @@ private int normalMap;
 private int depthMap;
 private Vector3f wat;
 
-private float shineDamper = 100;
-private float reflectivity = 2;
+private float shineDamper = 10;
+private float reflectivity = 0.5f;
 
 public boolean hasTransparancey = false;
 private boolean useFakeLighting = false;
