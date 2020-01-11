@@ -52,7 +52,6 @@ public class MainGameLoop {
     {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
-        MasterRenderer renderer = new MasterRenderer(loader);
         //************************************************************************************
 
 
@@ -109,10 +108,13 @@ public class MainGameLoop {
         Camera camera = new Camera(player);
 
         animEntities.add(animatedModel);
-        //animEntities.add(animatedModel);
+        animEntities.add(animatedModel);
 
       // entities.add(player);
        //entities.add(player);//==================КОСТЫЛЬ=====АЛЁРТ=====
+
+        MasterRenderer renderer = new MasterRenderer(loader , camera);
+
 //========================================================================================
 
         //===============================TESTS===============================
@@ -206,6 +208,7 @@ public class MainGameLoop {
         TexturedModel treeLowPoly_1_Texture = new TexturedModel(treeLowPolyModel_1,new ModelTexture(loader.loadTexture("lowPolyTree")));
 
 
+
 //-------------------------------BOX----------------------------------
 
         ModelData boxData = OBJFileLoader.loadOBJ("wall2");
@@ -283,21 +286,8 @@ public class MainGameLoop {
         );
 
         TexturedModel wellTexture = new TexturedModel(wellModel,new ModelTexture(loader.loadTexture("white")));
+        wellTexture.getTexture().setReflectivity(10);
 
-
-        //-------------------------------SPIDER---------------------------------
-
-        ModelData spiderData = OBJFileLoader.loadOBJ("spider10");
-
-
-        RawModel spiderModel = loader.loadToVAO(
-                spiderData.getVertices(),
-                spiderData.getTextureCoords() ,
-                spiderData.getNormals(),
-                spiderData.getIndices()
-        );
-
-        TexturedModel spiderTexture = new TexturedModel(spiderModel,new ModelTexture(loader.loadTexture("spiderTex")));
 
 
 
@@ -314,6 +304,7 @@ public class MainGameLoop {
         );
 
         TexturedModel watHouseTe = new TexturedModel(watHouseModel,new ModelTexture(loader.loadTexture("watHouseTex")));
+        watHouseTe.getTexture().setHasTransparancey(true);
 //---------------------------------------------------------
 
 
@@ -321,7 +312,7 @@ public class MainGameLoop {
 
 //+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=++=+=LIGHTS==+=+=+=+=++==++=+=+=+=+=+=+=+=+
         //lights.add(new Light(new Vector3f(0,1200,-3000),new Vector3f(1f,1f,1f)));//это типо солнце
-        Light sun = new Light(new Vector3f(5000,7000,-4000),new Vector3f(1f,1f,1f));//это типо солнце
+        Light sun = new Light(new Vector3f(1000000,1500000,-100000),new Vector3f(1f,1f,1f));//это типо солнце
         lights.add(sun);
         lights.add(new Light(new Vector3f(185,10,-293) , new Vector3f(4,0,0) , new Vector3f(1,0.01f,0.002f)));//а вот это фонари
         lights.add(new Light(new Vector3f(370,terrain.getHeightOfTerrain(370,-300) + 8,-300) , new Vector3f(0,4,4), new Vector3f(1,0.01f,0.002f)));
@@ -332,7 +323,9 @@ public class MainGameLoop {
 
  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        entities.add(new Entity(lampTexture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) ,
+        entities.add(new Entity(treeLowPoly_1_Texture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) ,
+                0,0,0,4));
+        entities.add(new Entity(treeLowPoly_1_Texture , new Vector3f(185 , terrain.getHeightOfTerrain(185,-293) , -293) ,
                 0,0,0,4));
         entities.add(new Entity(lampTexture , new Vector3f(370 , terrain.getHeightOfTerrain(370,-300) , -300) ,
                 0,0,0,3));
@@ -350,13 +343,6 @@ public class MainGameLoop {
                 0,0,0,0.8F));
                 entities.add(new Entity(wellTexture , new Vector3f(350 , terrain.getHeightOfTerrain(350,-250) , -250) ,
                         0,0,0,0.8f));
-
-        Entity spider = new Entity(spiderTexture ,
-                new Vector3f(300 , terrain.getHeightOfTerrain(300,-250) + 120 , -250) ,
-                0,0,0,7);
-        entities.add(spider);
-        entities.add(spider);
-
 
         Entity watHouse = new Entity( watHouseTe,
                 new Vector3f(350 , terrain.getHeightOfTerrain(350,-390) -26 , -390) ,
@@ -377,11 +363,17 @@ public class MainGameLoop {
                     new Vector3f(x, y,z),
                     0,random.nextFloat() *500,0,2));
         }*/
+        TexturedModel pineNormal  = new TexturedModel(NormalMappedObjLoader.loadOBJ("pine" , loader),
+                new ModelTexture(loader.loadTexture("pine")));
+        pineNormal.getTexture().setShineDamper(2);
+        pineNormal.getTexture().setReflectivity(0.1f);
+
+        pineNormal.getTexture().setNormalMap(loader.loadTexture("pineNormal"));
 
 
         for(int i=0 ; i <80 ; i++)
         {
-            float x = random.nextFloat()*1000;
+           float x = random.nextFloat()*1000;
             float z = random.nextFloat()* -1000 ;
             float y = terrain.getHeightOfTerrain(x,z);
 
@@ -390,12 +382,7 @@ public class MainGameLoop {
                     0,random.nextFloat() *500,0,random.nextFloat()*3f));
 
 
-             x = random.nextFloat()*800;
-             z = random.nextFloat()* -800 ;
-             y = terrain.getHeightOfTerrain(x,z)-1;
-            entities.add(new Entity(boxTexture,
-                    new Vector3f(x, y,z),
-                    random.nextFloat() *500,random.nextFloat() *500,random.nextFloat() *500,random.nextFloat()*10));
+
 
 
 
@@ -414,21 +401,26 @@ public class MainGameLoop {
             entities.add(new Entity(flowerTexture,
                     new Vector3f(x, y,z)
                     ,0,random.nextFloat() *500,0,3));
-           /* x = random.nextFloat()*800 -400;
+            x = random.nextFloat()*800 -400;
             z = random.nextFloat()* -600;
             y = terrain.getHeightOfTerrain(x,z);
 
             entities.add(new Entity(treeLowPoly_1_Texture,
                     new Vector3f(x,y,z)
-                    ,0,random.nextFloat() *500,0,random.nextFloat()*2));*/
+                    ,0,random.nextFloat() *500,0,random.nextFloat()*2));
 
             x = random.nextFloat()*1000;
             z = random.nextFloat()* -1000;
             y = terrain.getHeightOfTerrain(x,z);
+            float s = random.nextFloat()*4;
+            Entity pineN = new Entity(pineNormal , new Vector3f(x,y,z)  ,
+                    0,s * 500,0,s*1.01f);
 
-            entities.add(new Entity(pineTexture,
-                    new Vector3f(x, y,z),
-                    0,random.nextFloat() *500,0,random.nextFloat()*4));
+            normalMapEntities.add(pineN);
+            normalMapEntities.add(pineN);
+
+            entities.add(new Entity(pineTexture, new Vector3f(x+10, y,z),
+                    0,s *500,0,s));
 
         }
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -456,10 +448,11 @@ public class MainGameLoop {
         WaterTile water = new WaterTile(800,-800,-3);
         waters.add(water);
 
-/*        GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture() , new Vector2f(0.5f,0.5f) , new Vector2f(0.25f,0.25f));
-        GuiTexture refrection = new GuiTexture(fbos.getReflectionTexture() , new Vector2f(-0.5f,0.5f) , new Vector2f(0.25f,0.25f));
-        guis.add(refraction);
-        guis.add(refrection);*/
+        //ТЕНИ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        GuiTexture shadowMap = new GuiTexture(renderer.getShadowMapTexture() , new Vector2f(0.5f,0.5f) , new Vector2f(0.5f,0.5f));
+       // guis.add(shadowMap);
+
+
 
 
 
@@ -502,6 +495,8 @@ public class MainGameLoop {
                 0,50,0,15f);
         normalMapEntities.add(wallNormal);
         normalMapEntities.add(wallNormal);
+//
+//==================================
 
 
 
@@ -544,8 +539,10 @@ public class MainGameLoop {
 
             player.move(terrain ,animatedModel);//если не анимированная модель то без плеера
             camera.move();
-            picker.update();
+           // picker.update();
 
+
+           // renderer.renderShadowMap(entities,sun);
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 
 

@@ -1,4 +1,4 @@
-package utils;
+package toolBox;
 
 public class SmoothFloat {
 	

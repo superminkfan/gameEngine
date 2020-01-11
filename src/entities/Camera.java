@@ -5,7 +5,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.DisplayManager;
-import utils.SmoothFloat;
+import toolBox.SmoothFloat;
 
 public class Camera  implements ICamera{
 
@@ -16,15 +16,12 @@ public class Camera  implements ICamera{
 
 
 
-    //private float distanceFromPlayer = 0;
     private SmoothFloat distanceFromPlayer = new SmoothFloat(0, 10);
-    // private float angleAroundPlayer = 0;
     private SmoothFloat angleAroundPlayer = new SmoothFloat(0, 10);
 
 
 
     private Vector3f position = new Vector3f(100,40,-20);
-   // private float pitch = 0;
     private SmoothFloat pitch = new SmoothFloat(0 , 10);
     private float yaw;
     private float roll;
@@ -73,13 +70,6 @@ public class Camera  implements ICamera{
         return Matrix4f.mul(projectionMatrix, viewMatrix, null);
     }
 
-  /*  private void updateViewMatrix() {
-        viewMatrix.setIdentity();
-        Matrix4f.rotate((float) Math.toRadians(pitch.get()), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-        Matrix4f.rotate((float) Math.toRadians(yaw), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-        Vector3f negativeCameraPos = new Vector3f(-position.x, -position.y, -position.z);
-        Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
-    }*/
 
 //***************************************************************************************************
 
@@ -94,11 +84,6 @@ public class Camera  implements ICamera{
         calculateCameraPosition(horizontalDistance , verticalDistance);
 
         this.yaw = 180 - (player.getRotY() + angleAroundPlayer.get());
-        //настраеваем движение типо камеры
-
-
-
-
 
 
     }
@@ -111,7 +96,7 @@ public class Camera  implements ICamera{
 
         position.x = player.getPosition().x - offsetX;
         position.z = player.getPosition().z - offsetZ;
-        position.y = player.getPosition().y + verticalDistance + 10;
+        position.y = player.getPosition().y + verticalDistance + 11;
 
     }
 
@@ -141,8 +126,6 @@ public class Camera  implements ICamera{
         if (Mouse.isButtonDown(1))
         {
             float pitchChane = Mouse.getDY() * 0.4f;
-            //pitch = pitch - pitchChane;
-            //pitch = new SmoothFloat(pitch.get() - pitchChane , 10);
             pitch.increaseTarget(-pitchChane);
             clampPitch();
 
@@ -175,8 +158,11 @@ public class Camera  implements ICamera{
     public void invertPitch()
     {
 
-        //this.pitch = -pitch;
         this.pitch = new SmoothFloat(-pitch.get() , 10);
+//        SmoothFloat new_pitch = this.pitch;
+//        this.pitch.increaseTarget(-new_pitch.get());
+//        this.pitch.update(DisplayManager.getFrameTimeSecinds());
+
     }
 
 
