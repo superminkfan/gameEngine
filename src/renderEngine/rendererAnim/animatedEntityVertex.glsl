@@ -1,8 +1,7 @@
 #version 400 core
 
-const int MAX_JOINTS = 50;//max joints allowed in a skeleton
-const int MAX_WEIGHTS = 3;//max number of joints that can affect a vertex
-
+const int MAX_JOINTS = 50;
+int MAX_WEIGHTS = 3;
 in vec3 in_position;
 in vec2 in_textureCoords;
 in vec3 in_normal;
@@ -11,7 +10,7 @@ in vec3 in_weights;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector[5];//четыре потому что если будет блдьше то не потянет
+out vec3 toLightVector[5];
 //4 источника света могут влиять на основной цвет
 out vec3 toCameraVector;
 out float visibility;

@@ -16,8 +16,8 @@ uniform sampler2D diffuseMap;
 
 uniform vec3 lightColour[5];
 uniform vec3 attenuation[5];
-const float shineDamper = 20;
-const float reflectivity = 0.7f;
+const float shineDamper = 10;
+const float reflectivity = 0.9f;
 uniform vec3 skyColour;
 
 void main(void){

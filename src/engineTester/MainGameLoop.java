@@ -460,7 +460,7 @@ public class MainGameLoop {
 //=====================================================
         //NORMAL MAPPING ENTETIES
         TexturedModel barrelModel  = new TexturedModel(NormalMappedObjLoader.loadOBJ("sphere1" , loader),
-                new ModelTexture(loader.loadTexture("bricks2")));
+                new ModelTexture(loader.loadTexture("bricks4")));
         barrelModel.getTexture().setShineDamper(3);
         barrelModel.getTexture().setReflectivity(0.7f);
 
@@ -542,7 +542,7 @@ public class MainGameLoop {
            // picker.update();
 
 
-           // renderer.renderShadowMap(entities,sun);
+            renderer.renderShadowMap(entities,sun);
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 
 
