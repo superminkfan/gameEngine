@@ -4,21 +4,19 @@ import models.RawModel;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.Loader;
-import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolBox.Maths;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class Terrain {
 
-    private static final int SIZE = 800;
-    private static final float MAX_HEIGHT = 50;
+    private static final int SIZE = 2000;
+    private static final float MAX_HEIGHT = 100;
     private static final float MAX_PIXEL_COLOUR = 256*256*256;
 
 

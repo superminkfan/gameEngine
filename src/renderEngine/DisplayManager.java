@@ -23,7 +23,7 @@ private static float delta;
             try {
                 Display.setDisplayMode(new DisplayMode(WIDTH,HEIGHT));
                 Display.create(new PixelFormat() , attribs);
-                Display.setTitle("Pervaya laba po grafice");
+                Display.setTitle("Game");
 
 
 

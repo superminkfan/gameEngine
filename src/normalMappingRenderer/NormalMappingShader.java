@@ -1,18 +1,18 @@
 package normalMappingRenderer;
 
-import java.util.List;
-
+import entities.Light;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
-
-import entities.Light;
 import shaders.ShaderProgram;
+
+import java.util.List;
 
 public class NormalMappingShader extends ShaderProgram{
 
-    private static final int MAX_LIGHTS = 4;
+    private static final int MAX_LIGHTS = 5;
 
     private static final String VERTEX_FILE = "src/normalMappingRenderer/normalMapVShader.glsl";
     private static final String FRAGMENT_FILE = "src/normalMappingRenderer/normalMapFShader.glsl";
@@ -32,6 +32,7 @@ public class NormalMappingShader extends ShaderProgram{
     private int location_modelTexture;
     private int location_normalMap;
     private int location_depthMap;
+    private int location_test;
 
     public NormalMappingShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -59,6 +60,7 @@ public class NormalMappingShader extends ShaderProgram{
         location_modelTexture = super.getUniformLocation("modelTexture");
         location_normalMap = super.getUniformLocation("normalMap");
         location_depthMap = super.getUniformLocation("depthMap");
+        location_test = super.getUniformLocation("test");
         location_lightPositionEyeSpace = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
         location_attenuation = new int[MAX_LIGHTS];
@@ -127,6 +129,12 @@ public class NormalMappingShader extends ShaderProgram{
         Vector4f eyeSpacePos = new Vector4f(position.x,position.y, position.z, 1f);
         Matrix4f.transform(viewMatrix, eyeSpacePos, eyeSpacePos);
         return new Vector3f(eyeSpacePos);
+    }
+    //*********************
+    protected void loadTestVector( Vector3f vector)
+    {
+        GL20.glUniform3f(location_test, vector.x, vector.y, vector.z);
+
     }
 
 

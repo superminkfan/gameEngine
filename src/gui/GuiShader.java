@@ -1,7 +1,6 @@
 package gui;
 
 import org.lwjgl.util.vector.Matrix4f;
-
 import shaders.ShaderProgram;
 
 public class GuiShader extends ShaderProgram{

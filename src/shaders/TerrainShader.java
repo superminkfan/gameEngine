@@ -14,7 +14,7 @@ public class TerrainShader  extends ShaderProgram{
     private static final String VERTEX_FILE = "src/shaders/GLSL/terrainVertexShader.glsl";
     private static final String FRAGMENT_FILE = "src/shaders/GLSL/terrainFragmentShader.glsl";
 
-    private static final int MAX_LIGHTS = 4;
+    private static final int MAX_LIGHTS = 5;
 
     private int location_transformationMatrix;//деаем настройку матриц
     private int location_projectionMatrix;
@@ -31,6 +31,8 @@ public class TerrainShader  extends ShaderProgram{
     private int location_bTexture;
     private int location_blendMap;
     private int location_plane;
+    private int location_toShadowMapSpace;
+    private int location_shadowMap;
 
 
     public TerrainShader()
@@ -53,6 +55,8 @@ public class TerrainShader  extends ShaderProgram{
         location_blendMap = super.getUniformLocation("blendMap");
 
         location_plane = super.getUniformLocation("plane");
+        location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
+        location_shadowMap = super.getUniformLocation("shadowMap");
 
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -84,7 +88,13 @@ public class TerrainShader  extends ShaderProgram{
         super.loadInt(location_gTexture, 2);
         super.loadInt(location_bTexture, 3);
         super.loadInt(location_blendMap, 4);
+        super.loadInt(location_shadowMap, 5);
 
+    }
+
+    public void loadToShadowMapSpace(Matrix4f matrix)
+    {
+          super.loadMatrix(location_toShadowMapSpace,matrix);
     }
 
     public void loadSkuColourVariable(float r , float g , float b)

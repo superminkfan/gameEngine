@@ -1,23 +1,22 @@
 package normalMappingRenderer;
 
-import java.util.List;
-import java.util.Map;
-
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
+import models.RawModel;
+import models.TexturedModel;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
-
-import entities.Camera;
-import entities.Entity;
-import entities.Light;
-import models.RawModel;
-import models.TexturedModel;
 import renderEngine.MasterRenderer;
 import textures.ModelTexture;
 import toolBox.Maths;
+
+import java.util.List;
+import java.util.Map;
 
 public class NormalMappingRenderer {
 
@@ -63,6 +62,7 @@ public class NormalMappingRenderer {
         if (texture.isHasTransparancey()) {
             MasterRenderer.disableCulling();
         }
+
         shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
@@ -93,6 +93,7 @@ public class NormalMappingRenderer {
         //потом сделаешь паблик и все тут
         shader.loadSkyColour(MasterRenderer.RED, MasterRenderer.GREEN, MasterRenderer.BLUE);
         Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+        shader.loadTestVector(camera.getPosition());//kostyyyyyyyyyyyyyl`
 
         shader.loadLights(lights, viewMatrix);
         shader.loadViewMatrix(viewMatrix);

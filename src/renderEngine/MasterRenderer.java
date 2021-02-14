@@ -3,14 +3,19 @@ package renderEngine;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.animatedModel.AnimatedModel;
 import models.TexturedModel;
 import normalMappingRenderer.NormalMappingRenderer;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
+import renderEngine.rendererAnim.AnimatedModelRenderer;
+import renderEngine.rendererAnim.AnimatedModelShader;
 import shaders.StaticShader;
 import shaders.TerrainShader;
+import shadows.ShadowMapMasterRenderer;
 import skybox.SkyboxRenderer;
 import terrains.Terrain;
 
@@ -21,9 +26,9 @@ import java.util.Map;
 
 public class MasterRenderer {
 
-    private static final float FOV = 70;
-    private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 7000f;
+    public static final float FOV = 50;
+    public static final float NEAR_PLANE = 0.1f;
+    public static final float FAR_PLANE = 7000f;
 
     public static final float RED = 0.3f;
     public static final float GREEN = 0.6f;
@@ -40,12 +45,22 @@ public class MasterRenderer {
 
 
 
-    private NormalMappingRenderer normalMapRendere;
+    private NormalMappingRenderer normalMapRenderer;
+
+
+
+    private AnimatedModelShader animShader = new AnimatedModelShader();
+    private AnimatedModelRenderer animRenderer;
 
 
 
     private Map<TexturedModel, List<Entity>> entities =
             new HashMap<TexturedModel, List<Entity>>();
+
+
+    //вот тут новый лист аним ентетис
+    private List<AnimatedModel> animEntities = new ArrayList<>();
+
     private Map<TexturedModel, List<Entity>> normalMapEntities =
             new HashMap<TexturedModel, List<Entity>>();
 
@@ -53,9 +68,16 @@ public class MasterRenderer {
 
 
     private SkyboxRenderer skyboxRenderer;
+    private ShadowMapMasterRenderer shadowMapMasterRenderer;
 
 
-    public MasterRenderer(Loader loader) {
+
+
+
+
+
+
+    public MasterRenderer(Loader loader , Camera camera) {
 
         enableCulling();
 
@@ -63,7 +85,9 @@ public class MasterRenderer {
         renderer = new EntityRenderer(shader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(loader,projectionMatrix);
-        normalMapRendere = new NormalMappingRenderer(projectionMatrix);
+        normalMapRenderer = new NormalMappingRenderer(projectionMatrix);
+        animRenderer = new AnimatedModelRenderer(animShader , projectionMatrix);
+        this.shadowMapMasterRenderer = new ShadowMapMasterRenderer(camera);
 
     }
 
@@ -85,7 +109,8 @@ public class MasterRenderer {
     }
 
 
-    public void renderScene(List<Entity> entities ,List<Entity> normalEntities,  List<Terrain> terrains , List<Light> lights ,
+    public void renderScene(List<Entity> entities , List<Entity> normalEntities, List<AnimatedModel> animEnt ,
+                            List<Terrain> terrains , List<Light> lights ,
                             Camera camera , Vector4f clipPlane)
     {
         for(Terrain terrain:terrains){
@@ -95,10 +120,16 @@ public class MasterRenderer {
         for(Entity entity:entities){
             processEntity(entity);
         }
+
+
+
         for(Entity entity : normalEntities)
         {
             processNormalMapEntity(entity);
         }
+        this.animEntities=animEnt;
+
+        //вот тут добавь просесс аним ентети
         render(lights,camera,clipPlane);
 
     }
@@ -116,20 +147,35 @@ public class MasterRenderer {
         renderer.render(entities);
         shader.stop();
 
-        normalMapRendere.render(normalMapEntities,clipPlane,lights,camera);
+        normalMapRenderer.render(normalMapEntities,clipPlane,lights,camera);
+
+
+        //*********************************
+        //гдето здесь шейдер анимаций его подготовка и загрузка параметров
+        animShader.start();
+
+        animShader.loadClipPlane(clipPlane);
+        animShader.loadSkuColourVariable(RED, GREEN , BLUE);
+        animShader.loadLights(lights);
+        animShader.loadViewMatrix(camera);
+        animRenderer.render(animEntities);//костыль!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+
+        animShader.stop();
+        //*********************************
 
         terrainShader.start();
         terrainShader.loadClipPlane(clipPlane);
         terrainShader.loadSkuColourVariable(RED, GREEN , BLUE);
         terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
-        terrainRenderer.render(terrains);
+        terrainRenderer.render(terrains,shadowMapMasterRenderer.getToShadowMapSpaceMatrix());
         terrainShader.stop();
 
         skyboxRenderer.render(camera ,RED, GREEN , BLUE );
         terrains.clear();
         entities.clear();
         normalMapEntities.clear();
+
 
     }
 
@@ -139,6 +185,8 @@ public class MasterRenderer {
         terrains.add(terrain);
     }
 
+
+    //вот тут просес аним ентети
 
     public void processEntity(Entity entity)
     {
@@ -153,6 +201,9 @@ public class MasterRenderer {
             entities.put(entityModel,newBatch);
         }
     }
+
+
+
 
     public void processNormalMapEntity(Entity entity)
     {
@@ -173,16 +224,19 @@ public class MasterRenderer {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClearColor(RED, GREEN,BLUE,1);//цвет дисполея
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+        GL13.glActiveTexture(GL13.GL_TEXTURE5);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D , getShadowMapTexture());
     }
 
-    private void createProjectionMatrix()
+    public void createProjectionMatrix()
     {
+        projectionMatrix = new Matrix4f();
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
+        float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = FAR_PLANE - NEAR_PLANE;
 
-        projectionMatrix = new Matrix4f();
         projectionMatrix.m00 = x_scale;
         projectionMatrix.m11 = y_scale;
         projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
@@ -192,11 +246,28 @@ public class MasterRenderer {
     }
 
 
+    public void renderShadowMap(List<Entity> entityList, Light sun)
+    {
+       for(Entity entity: entityList)
+         {
+            processEntity(entity);
+         }
+         shadowMapMasterRenderer.render(entities,sun);
+       entities.clear();
+    }
+
+    public int getShadowMapTexture()
+    {
+        return shadowMapMasterRenderer.getShadowMap();
+    }
+
     public void cleanUp()
     {
         shader.cleanUp();
+        animShader.cleanUp();
         terrainShader.cleanUp();
-        normalMapRendere.cleanUp();
+        normalMapRenderer.cleanUp();
+        shadowMapMasterRenderer.cleanUp();
     }
 
 }
